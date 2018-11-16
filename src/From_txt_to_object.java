@@ -1,6 +1,10 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.CharacterAction;
 
 public class From_txt_to_object {
 	
@@ -35,11 +39,69 @@ public class From_txt_to_object {
 		List<String> values = create_values(it.next()); 
 		List<Character> parents = create_parents(it.next());
 		it.next(); // "CPT:" line.
+		List<Cond_prob> c_p = new ArrayList<>();
 		while(!line.trim().isEmpty()) {
-			//TODO: Implement the conversion of the cond_prob.
+			c_p.add(create_cond_prob(it.next(), parents));
 			line = it.next();
 		}
+		return new Variable(variable_name, values, parents, c_p);
+	}
+
+	private static Cond_prob create_cond_prob(String string_cond_prob, List<Character> parents) {
+		String[] array = string_cond_prob.split("");
+		Iterator<String> it_cond_prob = new ArrayList<>(Arrays.asList(array)).iterator();
+		HashMap<String, Character> dependencies = create_dependencies(it_cond_prob, parents);
+		HashMap<Condition, Integer> probability = new HashMap<>();
+		while(it_cond_prob.hasNext()) 
+			probability.put(create_condition(it_cond_prob, dependencies), create_integer(it_cond_prob);
+		
 		return null;
+	}
+
+	private static Integer create_integer(Iterator<String> it_cond_prob) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static Condition create_condition(Iterator<String> it_cond_prob, HashMap<String, 
+											  Character> dependencies) {
+		String value = "";
+		String character = it_cond_prob.next();
+		while(character != ",") {
+			value += character;
+			character = it_cond_prob.next();
+		}
+		return null;
+	}
+
+	private static HashMap<Condition, Integer> create_probability(Iterator<String> it_cond_prob,
+																  HashMap<String, Character> dependencies) {
+		
+		for (int j = i++; j < string_cond_prob.length(); j++) {
+			if(string_cond_prob.charAt(i) == ',') {
+				Condition condition = new Condition(value, dependencies);
+				value = "";
+			}
+			value += string_cond_prob.charAt(j);
+		}
+	}
+
+	private static HashMap<String, Character> create_dependencies(Iterator<String> it_cond_prob, 
+																  List<Character> parents) {
+		HashMap<String, Character> dependencies = new HashMap<>();
+		Iterator<Character> it = parents.iterator();
+		String parent_value = "";
+		String character = it_cond_prob.next();
+		while(character != "=") {
+			if(character == ",") {
+				dependencies.put(parent_value, it.next());
+				parent_value = "";
+				character = it_cond_prob.next();
+			}
+			parent_value += character;
+			character = it_cond_prob.next();
+		}
+		return dependencies;
 	}
 
 	private static List<Character> create_parents(String string_parents) {

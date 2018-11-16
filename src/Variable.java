@@ -2,8 +2,8 @@ import java.util.List;
 
 public class Variable {
 
-	private char name;
-	private List<String> values;
+	private char name; // The name is injective (PK).
+	private List<String> values; 
 	private List<Character> parents;
 	private List<Cond_prob> c_p;
 	
@@ -13,5 +13,11 @@ public class Variable {
 		this.parents = parents;
 		this.c_p = c_p;
 	}
+	
+	public char get_name() {
+		return this.name;
+	}
+	
+	
 	
 }

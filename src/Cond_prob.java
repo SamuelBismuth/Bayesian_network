@@ -1,13 +1,11 @@
-import java.util.List;
+import java.util.HashMap;
 
 public class Cond_prob {
 	
-	private List<Variable> parents;
-	private List<String> values;
+	private HashMap<Condition, Integer> probability;  // HashMap:  condition -> probability.
 	
-	public Cond_prob(List<Variable> parents, List<String> values) {
-		this.parents = parents;
-		this.values = values;
+	public Cond_prob(HashMap<Condition, Integer> probability) {
+		this.probability = probability;
 	}
 	
 }
