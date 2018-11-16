@@ -51,16 +51,21 @@ public class From_txt_to_object {
 		String[] array = string_cond_prob.split("");
 		Iterator<String> it_cond_prob = new ArrayList<>(Arrays.asList(array)).iterator();
 		HashMap<String, Character> dependencies = create_dependencies(it_cond_prob, parents);
-		HashMap<Condition, Integer> probability = new HashMap<>();
+		HashMap<Condition, Double> probability = new HashMap<>();
 		while(it_cond_prob.hasNext()) 
-			probability.put(create_condition(it_cond_prob, dependencies), create_integer(it_cond_prob);
+			probability.put(create_condition(it_cond_prob, dependencies), create_double(it_cond_prob));
 		
 		return null;
 	}
 
-	private static Integer create_integer(Iterator<String> it_cond_prob) {
-		// TODO Auto-generated method stub
-		return null;
+	private static Double create_double(Iterator<String> it_cond_prob) {
+		String double_string = "";
+		String character = it_cond_prob.next();
+		while(character != ",") {
+			double_string += character;
+			character = it_cond_prob.next();
+		}
+		return Double.parseDouble(double_string);
 	}
 
 	private static Condition create_condition(Iterator<String> it_cond_prob, HashMap<String, 
@@ -71,19 +76,7 @@ public class From_txt_to_object {
 			value += character;
 			character = it_cond_prob.next();
 		}
-		return null;
-	}
-
-	private static HashMap<Condition, Integer> create_probability(Iterator<String> it_cond_prob,
-																  HashMap<String, Character> dependencies) {
-		
-		for (int j = i++; j < string_cond_prob.length(); j++) {
-			if(string_cond_prob.charAt(i) == ',') {
-				Condition condition = new Condition(value, dependencies);
-				value = "";
-			}
-			value += string_cond_prob.charAt(j);
-		}
+		return new Condition(value, dependencies);
 	}
 
 	private static HashMap<String, Character> create_dependencies(Iterator<String> it_cond_prob, 

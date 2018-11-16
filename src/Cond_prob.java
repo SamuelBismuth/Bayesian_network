@@ -2,9 +2,9 @@ import java.util.HashMap;
 
 public class Cond_prob {
 	
-	private HashMap<Condition, Integer> probability;  // HashMap:  condition -> probability.
+	private HashMap<Condition, Double> probability;  // HashMap:  condition -> probability.
 	
-	public Cond_prob(HashMap<Condition, Integer> probability) {
+	public Cond_prob(HashMap<Condition, Double> probability) {
 		this.probability = probability;
 	}
 	
