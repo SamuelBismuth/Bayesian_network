@@ -2,7 +2,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.CharacterAction;
 
@@ -48,8 +52,11 @@ public class From_txt_to_object {
 	}
 
 	private static Cond_prob create_cond_prob(String string_cond_prob, List<Character> parents) {
-		String[] array = string_cond_prob.split("");
-		Iterator<String> it_cond_prob = new ArrayList<>(Arrays.asList(array)).iterator();
+		char[] array = string_cond_prob.toCharArray();
+		Stream<Character> myStreamOfCharacters = IntStream
+		          .range(0, array.length)
+		          .mapToObj(i -> array[i]);
+		Iterator<Character> it_cond_prob = myStreamOfCharacters.collect(Collectors.toList()).iterator();
 		HashMap<String, Character> dependencies = create_dependencies(it_cond_prob, parents);
 		HashMap<Condition, Double> probability = new HashMap<>();
 		while(it_cond_prob.hasNext()) 
@@ -58,38 +65,43 @@ public class From_txt_to_object {
 		return null;
 	}
 
-	private static Double create_double(Iterator<String> it_cond_prob) {
+	private static Double create_double(Iterator<Character> it_cond_prob) {
 		String double_string = "";
-		String character = it_cond_prob.next();
-		while(character != ",") {
+		char character = it_cond_prob.next();
+		while(character != ',' && it_cond_prob.hasNext()) {
 			double_string += character;
 			character = it_cond_prob.next();
 		}
 		return Double.parseDouble(double_string);
 	}
 
-	private static Condition create_condition(Iterator<String> it_cond_prob, HashMap<String, 
+	private static Condition create_condition(Iterator<Character> it_cond_prob, HashMap<String, 
 											  Character> dependencies) {
 		String value = "";
-		String character = it_cond_prob.next();
-		while(character != ",") {
+		char character = it_cond_prob.next();
+		while(character != ',') {
 			value += character;
 			character = it_cond_prob.next();
 		}
 		return new Condition(value, dependencies);
 	}
 
-	private static HashMap<String, Character> create_dependencies(Iterator<String> it_cond_prob, 
+	private static HashMap<String, Character> create_dependencies(Iterator<Character> it_cond_prob, 
 																  List<Character> parents) {
 		HashMap<String, Character> dependencies = new HashMap<>();
+		if(parents == null)
+			return null;
 		Iterator<Character> it = parents.iterator();
 		String parent_value = "";
-		String character = it_cond_prob.next();
-		while(character != "=") {
-			if(character == ",") {
-				dependencies.put(parent_value, it.next());
+		char character = it_cond_prob.next();
+		while(character != '=') {
+			if(character == ',') {
+				//System.out.println(parent_value);
+				char it_next = it.next();
+				//System.out.println(it_next);
+				//System.out.println(character);
+				dependencies.put(parent_value, it_next);
 				parent_value = "";
-				character = it_cond_prob.next();
 			}
 			parent_value += character;
 			character = it_cond_prob.next();
