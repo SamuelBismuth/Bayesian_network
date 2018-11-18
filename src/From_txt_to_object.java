@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.sun.javafx.runtime.SystemProperties;
-
 public class From_txt_to_object {
 	
 	/**
@@ -17,21 +15,23 @@ public class From_txt_to_object {
 	 * @param list_txt
 	 * @return
 	 * @throws Wrong_txt
-	 */
-	public static Network create_network(List<String> list_txt) throws Wrong_txt {
-		if(!list_txt.get(0).contains("Network"))
+	 * Possible checking:
+	    if(!it.next().contains("Network"))
 			throw new Wrong_txt("The file doesn't begin with Network...");
-		if(!list_txt.get(1).contains("Variables:"))
+		String variables_string = it.next();
+		if(!variables_string.contains("Variables:"))
 			throw new Wrong_txt("The file doesn't include Variables...");
-		// - 11 for variables: and + 1 for the upper bound.
-		int number_of_variable = ((list_txt.get(1).length() - 11) + 1 )/ 2;  
-		List<Variable> variables = new ArrayList<Variable>();
-		Iterator<String> it = list_txt.subList(3, list_txt.size()).iterator();
-		for (int i = 0; i < number_of_variable; i++) {
-			variables.add(create_variable(it));
-		}
 		if(!it.next().contains("Queries"))
 			throw new Wrong_txt("The file doesn't include Queries...");
+	 */
+	public static Network create_network(List<String> list_txt) throws Wrong_txt {
+		Iterator<String> it = list_txt.subList(1, list_txt.size()).iterator();
+		// - 11 for variables: and + 1 for the upper bound.
+		int number_of_variable = ((it.next().length() - 11) + 1 )/ 2;  
+		List<Variable> variables = new ArrayList<Variable>();
+		it.next();
+		for (int i = 0; i < number_of_variable; i++) 
+			variables.add(create_variable(it));
 		List<Query> queries = new ArrayList<>();
 		while(it.hasNext())
 			queries.add(create_query(it.next()));
@@ -46,13 +46,12 @@ public class From_txt_to_object {
 	}
 
 	private static Variable create_variable(Iterator<String> it) {
-		String line = "Not_Null";
 		char variable_name =  it.next().charAt(4);
 		List<String> values = create_values(it.next()); 
 		List<Character> parents = create_parents(it.next());
 		it.next(); // "CPT:" line.
 		List<Cond_prob> c_p = new ArrayList<>();
-		line = it.next();
+		String line = it.next();
 		while(!line.trim().isEmpty()) {
 			c_p.add(create_cond_prob(variable_name, line, parents));
 			line = it.next();
@@ -61,11 +60,7 @@ public class From_txt_to_object {
 	}
 
 	private static Cond_prob create_cond_prob(char variable_name, String string_cond_prob, List<Character> parents) {
-		char[] array = string_cond_prob.toCharArray();
-		Stream<Character> myStreamOfCharacters = IntStream
-		          .range(0, array.length)
-		          .mapToObj(i -> array[i]);
-		Iterator<Character> it_cond_prob = myStreamOfCharacters.collect(Collectors.toList()).iterator();
+		Iterator<Character> it_cond_prob = from_string_to_iterator(string_cond_prob);
 		List<Probability> dependencies = create_dependencies(it_cond_prob, parents);
 		HashMap<Condition, Double> probability = new HashMap<>();
 		while(it_cond_prob.hasNext()) 
@@ -73,6 +68,14 @@ public class From_txt_to_object {
 		return new Cond_prob(probability);
 	}
 
+	private static Iterator<Character> from_string_to_iterator(String string) {
+		char[] array = string.toCharArray();
+		Stream<Character> myStreamOfCharacters = IntStream
+		          .range(0, array.length)
+		          .mapToObj(i -> array[i]);
+		return myStreamOfCharacters.collect(Collectors.toList()).iterator();
+	}
+	
 	private static Double create_double(Iterator<Character> it_cond_prob) {
 		String double_string = "";
 		char character = it_cond_prob.next();
@@ -84,11 +87,11 @@ public class From_txt_to_object {
 			double_string += character;
 			character = it_cond_prob.next();
 		}
-		
 		return Double.parseDouble(double_string);
 	}
 
-	private static Condition create_condition(char variable_name, Iterator<Character> it_cond_prob, List<Probability> dependencies) {
+	private static Condition create_condition(char variable_name, Iterator<Character> it_cond_prob, 
+											  List<Probability> dependencies) {
 		String value = "";
 		char character = it_cond_prob.next();
 		while(character != ',') {
@@ -100,10 +103,10 @@ public class From_txt_to_object {
 	}
 
 	private static List<Probability> create_dependencies(Iterator<Character> it_cond_prob, 
-																  List<Character> parents) {
-		List<Probability> dependencies = new ArrayList<>();
+														 List<Character> parents) {
 		if(parents == null)
 			return null;
+		List<Probability> dependencies = new ArrayList<>();
 		Iterator<Character> it = parents.iterator();
 		String parent_value = "";
 		char character = it_cond_prob.next();
@@ -143,6 +146,4 @@ public class From_txt_to_object {
 		values.add(value);
 		return values;
 	}
-	
-	
 }
