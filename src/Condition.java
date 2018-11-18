@@ -9,5 +9,13 @@ public class Condition {
 		this.value = value;
 		this.dependencies = dependencies;
 	}
+
+	@Override
+	public String toString() {
+		if(dependencies == null) 
+			return "Condition [value=" + value + ", dependencies=null]";
+		return "Condition [value=" + value + ", dependencies=" + dependencies.toString() + "]";
+	}
+	
 	
 }

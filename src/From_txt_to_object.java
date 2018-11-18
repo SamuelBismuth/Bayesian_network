@@ -1,14 +1,10 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import javax.swing.text.html.HTMLDocument.HTMLReader.CharacterAction;
 
 public class From_txt_to_object {
 	
@@ -44,8 +40,9 @@ public class From_txt_to_object {
 		List<Character> parents = create_parents(it.next());
 		it.next(); // "CPT:" line.
 		List<Cond_prob> c_p = new ArrayList<>();
+		line = it.next();
 		while(!line.trim().isEmpty()) {
-			c_p.add(create_cond_prob(it.next(), parents));
+			c_p.add(create_cond_prob(line, parents));
 			line = it.next();
 		}
 		return new Variable(variable_name, values, parents, c_p);
@@ -61,17 +58,21 @@ public class From_txt_to_object {
 		HashMap<Condition, Double> probability = new HashMap<>();
 		while(it_cond_prob.hasNext()) 
 			probability.put(create_condition(it_cond_prob, dependencies), create_double(it_cond_prob));
-		
-		return null;
+		return new Cond_prob(probability);
 	}
 
 	private static Double create_double(Iterator<Character> it_cond_prob) {
 		String double_string = "";
 		char character = it_cond_prob.next();
-		while(character != ',' && it_cond_prob.hasNext()) {
+		while(character != ',') {
+			if(!it_cond_prob.hasNext()) {
+				double_string += character;
+				break;
+			}
 			double_string += character;
 			character = it_cond_prob.next();
 		}
+		
 		return Double.parseDouble(double_string);
 	}
 
@@ -96,11 +97,7 @@ public class From_txt_to_object {
 		char character = it_cond_prob.next();
 		while(character != '=') {
 			if(character == ',') {
-				//System.out.println(parent_value);
-				char it_next = it.next();
-				//System.out.println(it_next);
-				//System.out.println(character);
-				dependencies.put(parent_value, it_next);
+				dependencies.put(parent_value, it.next());
 				parent_value = "";
 			}
 			parent_value += character;

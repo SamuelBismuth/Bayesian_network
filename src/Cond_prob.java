@@ -8,4 +8,8 @@ public class Cond_prob {
 		this.probability = probability;
 	}
 	
+	@Override
+	public String toString() {
+		return probability.toString();
+	}
 }

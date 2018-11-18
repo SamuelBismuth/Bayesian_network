@@ -14,8 +14,14 @@ public class Variable {
 		this.c_p = c_p;
 	}
 	
+	// TODO: Implement the function to get the number of the last variable.
+	
 	public char get_name() {
 		return this.name;
+	}
+	
+	public List<Cond_prob> get_c_p() {
+		return this.c_p;
 	}
 	
 	
