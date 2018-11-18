@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.sun.javafx.runtime.SystemProperties;
+
 public class From_txt_to_object {
 	
 	/**
@@ -28,9 +30,19 @@ public class From_txt_to_object {
 		for (int i = 0; i < number_of_variable; i++) {
 			variables.add(create_variable(it));
 		}
-		// TODO.
-		List<Query> queries = null;
+		if(!it.next().contains("Queries"))
+			throw new Wrong_txt("The file doesn't include Queries...");
+		List<Query> queries = new ArrayList<>();
+		while(it.hasNext())
+			queries.add(create_query(it.next()));
 		return new Network(variables, queries);
+	}
+
+	private static Query create_query(String string_query) {
+		//System.out.println(string_query);
+		//char name = string_query.charAt(2);
+		
+		return null;
 	}
 
 	private static Variable create_variable(Iterator<String> it) {
@@ -42,22 +54,22 @@ public class From_txt_to_object {
 		List<Cond_prob> c_p = new ArrayList<>();
 		line = it.next();
 		while(!line.trim().isEmpty()) {
-			c_p.add(create_cond_prob(line, parents));
+			c_p.add(create_cond_prob(variable_name, line, parents));
 			line = it.next();
 		}
 		return new Variable(variable_name, values, parents, c_p);
 	}
 
-	private static Cond_prob create_cond_prob(String string_cond_prob, List<Character> parents) {
+	private static Cond_prob create_cond_prob(char variable_name, String string_cond_prob, List<Character> parents) {
 		char[] array = string_cond_prob.toCharArray();
 		Stream<Character> myStreamOfCharacters = IntStream
 		          .range(0, array.length)
 		          .mapToObj(i -> array[i]);
 		Iterator<Character> it_cond_prob = myStreamOfCharacters.collect(Collectors.toList()).iterator();
-		HashMap<String, Character> dependencies = create_dependencies(it_cond_prob, parents);
+		List<Probability> dependencies = create_dependencies(it_cond_prob, parents);
 		HashMap<Condition, Double> probability = new HashMap<>();
 		while(it_cond_prob.hasNext()) 
-			probability.put(create_condition(it_cond_prob, dependencies), create_double(it_cond_prob));
+			probability.put(create_condition(variable_name, it_cond_prob, dependencies), create_double(it_cond_prob));
 		return new Cond_prob(probability);
 	}
 
@@ -76,20 +88,20 @@ public class From_txt_to_object {
 		return Double.parseDouble(double_string);
 	}
 
-	private static Condition create_condition(Iterator<Character> it_cond_prob, HashMap<String, 
-											  Character> dependencies) {
+	private static Condition create_condition(char variable_name, Iterator<Character> it_cond_prob, List<Probability> dependencies) {
 		String value = "";
 		char character = it_cond_prob.next();
 		while(character != ',') {
-			value += character;
+			if (character!= '=')
+				value += character;
 			character = it_cond_prob.next();
 		}
-		return new Condition(value, dependencies);
+		return new Condition(new Probability(variable_name, value), dependencies);
 	}
 
-	private static HashMap<String, Character> create_dependencies(Iterator<Character> it_cond_prob, 
+	private static List<Probability> create_dependencies(Iterator<Character> it_cond_prob, 
 																  List<Character> parents) {
-		HashMap<String, Character> dependencies = new HashMap<>();
+		List<Probability> dependencies = new ArrayList<>();
 		if(parents == null)
 			return null;
 		Iterator<Character> it = parents.iterator();
@@ -97,10 +109,11 @@ public class From_txt_to_object {
 		char character = it_cond_prob.next();
 		while(character != '=') {
 			if(character == ',') {
-				dependencies.put(parent_value, it.next());
+				dependencies.add(new Probability(it.next(), parent_value));
 				parent_value = "";
 			}
-			parent_value += character;
+			if(character != ',')
+				parent_value += character;
 			character = it_cond_prob.next();
 		}
 		return dependencies;
