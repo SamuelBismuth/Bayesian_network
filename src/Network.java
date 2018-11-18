@@ -12,10 +12,20 @@ public class Network {
 	
 	public Variable find_variable_by_name(char variable_name) {
 		for(Variable variable : variables) {
-			if(variable.get_name() == variable_name)
+			if(variable.getName() == variable_name)
 				return variable;
 		}
 		return null;
+	}
+	
+	
+
+	public List<Variable> getVariables() {
+		return variables;
+	}
+
+	public List<Query> getQueries() {
+		return queries;
 	}
 
 	@Override

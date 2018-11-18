@@ -2,11 +2,19 @@
 public class Query {
 	
 	private Condition condition;
-	private int algorithm;
+	private char algorithm;
 	
-	public Query(Condition condition, int algorithm) {
+	public Query(Condition condition, char algorithm) {
 		this.condition = condition;
 		this.algorithm = algorithm;
+	}
+	
+	public Condition getCondition() {
+		return condition;
+	}
+
+	public char getAlgorithm() {
+		return algorithm;
 	}
 
 	@Override

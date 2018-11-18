@@ -16,11 +16,11 @@ public class Variable {
 	
 	// TODO: Implement the function to get the number of the last variable.
 	
-	public char get_name() {
+	public char getName() {
 		return this.name;
 	}
 	
-	public List<Cond_prob> get_c_p() {
+	public List<Cond_prob> getC_p() {
 		return this.c_p;
 	}
 
