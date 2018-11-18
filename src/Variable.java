@@ -23,6 +23,18 @@ public class Variable {
 	public List<Cond_prob> get_c_p() {
 		return this.c_p;
 	}
+
+	@Override
+	public String toString() {
+		String answer = "Variable: " + name + "\n"
+				+ "values=" + values.toString() + "\n";
+		if(parents != null)
+				answer += "parents=" + parents.toString() + "\n";
+		else
+			answer += "parents=none \n";
+		answer += c_p.toString();
+		return answer;
+	}
 	
 	
 	

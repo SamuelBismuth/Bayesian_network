@@ -1,14 +1,20 @@
 
 public class Query {
 	
-	private char name;
 	private Condition condition;
 	private int algorithm;
 	
-	public Query(char name, Condition condition, int algorithm) {
-		this.name = name;
+	public Query(Condition condition, int algorithm) {
 		this.condition = condition;
 		this.algorithm = algorithm;
 	}
+
+	@Override
+	public String toString() {
+		return "Query: " + 
+				condition.toString() + ", algorithm=" + algorithm + "\n";
+	}
+	
+	
 	 
 }

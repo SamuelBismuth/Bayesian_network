@@ -15,16 +15,13 @@ public class From_txt_to_object {
 	 * @param list_txt
 	 * @return
 	 * @throws Wrong_txt
-	 * Possible checking:
-	    if(!it.next().contains("Network"))
-			throw new Wrong_txt("The file doesn't begin with Network...");
-		String variables_string = it.next();
-		if(!variables_string.contains("Variables:"))
-			throw new Wrong_txt("The file doesn't include Variables...");
-		if(!it.next().contains("Queries"))
-			throw new Wrong_txt("The file doesn't include Queries...");
 	 */
-	public static Network create_network(List<String> list_txt) throws Wrong_txt {
+	public static Network create_network(List<String> list_txt) {
+		try {
+			verifying_txt(list_txt.iterator());
+		} catch (Wrong_txt e) {
+			e.printStackTrace();
+		}
 		Iterator<String> it = list_txt.subList(1, list_txt.size()).iterator();
 		// - 11 for variables: and + 1 for the upper bound.
 		int number_of_variable = ((it.next().length() - 11) + 1 )/ 2;  
@@ -33,16 +30,31 @@ public class From_txt_to_object {
 		for (int i = 0; i < number_of_variable; i++) 
 			variables.add(create_variable(it));
 		List<Query> queries = new ArrayList<>();
-		while(it.hasNext())
-			queries.add(create_query(it.next()));
+		it.next();
+		String line = it.next();
+		while(!line.trim().isEmpty()) {
+			queries.add(create_query(line));
+			line = it.next();
+		}
 		return new Network(variables, queries);
 	}
 
 	private static Query create_query(String string_query) {
-		//System.out.println(string_query);
-		//char name = string_query.charAt(2);
-		
-		return null;
+		String[] string_splited = string_query.split("\\|");
+		Probability variable_probability = create_probability(string_splited[0].
+									substring(2, string_splited[0].length()));
+		String[] string_splited_twice = 
+				string_splited[1].substring(0, string_splited[1].length() - 3).split(",");
+		List<Probability> variable_dependencies = new ArrayList<>();
+		for (int i = 0; i < string_splited_twice.length; i++)
+			variable_dependencies.add(create_probability(string_splited_twice[i]));
+		return new Query(new Condition(variable_probability, variable_dependencies), 
+				string_query.charAt(string_query.length() - 1));
+	}
+
+	private static Probability create_probability(String variable) {
+		String[] string_splited = variable.split("=");
+		return new Probability(string_splited[0].charAt(0), string_splited[1]);
 	}
 
 	private static Variable create_variable(Iterator<String> it) {
@@ -68,14 +80,6 @@ public class From_txt_to_object {
 		return new Cond_prob(probability);
 	}
 
-	private static Iterator<Character> from_string_to_iterator(String string) {
-		char[] array = string.toCharArray();
-		Stream<Character> myStreamOfCharacters = IntStream
-		          .range(0, array.length)
-		          .mapToObj(i -> array[i]);
-		return myStreamOfCharacters.collect(Collectors.toList()).iterator();
-	}
-	
 	private static Double create_double(Iterator<Character> it_cond_prob) {
 		String double_string = "";
 		char character = it_cond_prob.next();
@@ -146,4 +150,25 @@ public class From_txt_to_object {
 		values.add(value);
 		return values;
 	}
+	
+	private static void verifying_txt(Iterator<String> iterator) throws Wrong_txt {
+		if(!iterator.next().contains("Network"))
+			throw new Wrong_txt("The file doesn't begin with Network...");
+		String variables_string = iterator.next();
+		if(!variables_string.contains("Variables:"))
+			throw new Wrong_txt("The file doesn't include Variables...");
+		while(iterator.hasNext())
+			if(iterator.next().contains("Queries"))
+				return;
+		throw new Wrong_txt("The file doesn't include Queries...");
+	}
+	
+	private static Iterator<Character> from_string_to_iterator(String string) {
+		char[] array = string.toCharArray();
+		Stream<Character> myStreamOfCharacters = IntStream
+		          .range(0, array.length)
+		          .mapToObj(i -> array[i]);
+		return myStreamOfCharacters.collect(Collectors.toList()).iterator();
+	}
+	
 }

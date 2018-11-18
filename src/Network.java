@@ -17,4 +17,16 @@ public class Network {
 		}
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		String answer = "Network: \n";
+		for(Variable variable : variables)
+			answer += variable.toString() + "\n";
+		for (Query query : queries) 
+			answer += query.toString();
+		return answer;
+	}
+	
+	
 }
