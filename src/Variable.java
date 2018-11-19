@@ -14,7 +14,12 @@ public class Variable {
 		this.c_p = c_p;
 	}
 	
-	// TODO: Implement the function to get the number of the last variable.
+	public double total_prob(String value) {
+		double answer = 1.0;
+		for (Cond_prob cond_prob : c_p) 
+			answer *= cond_prob.cond_prob_by_value(value);
+		return answer;
+	}
 	
 	public char getName() {
 		return this.name;

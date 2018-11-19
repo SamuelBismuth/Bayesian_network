@@ -18,6 +18,10 @@ public class Network {
 		return null;
 	}
 	
+	// TODO: Must for all the probabilities, see if there is a match between all the condition of the network.
+	public double find_probability_by_condition(List<Probability> probabilities) {
+		return 0.0;
+	}
 	
 
 	public List<Variable> getVariables() {

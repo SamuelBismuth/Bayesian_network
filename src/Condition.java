@@ -9,6 +9,22 @@ public class Condition {
 		this.variable_probabilty = variable_probabilty;
 		this.variable_dependencies = variable_dependencies;
 	}
+	
+	public boolean is_condition_by_value(String value) {
+		if (this.getVariable_probabilty().getVariable_value().equals(value))
+			return true;
+		return false;
+	}
+
+	public Probability getVariable_probabilty() {
+		return variable_probabilty;
+	}
+
+
+	public List<Probability> getVariable_dependencies() {
+		return variable_dependencies;
+	}
+
 
 	@Override
 	public String toString() {

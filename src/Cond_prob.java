@@ -7,6 +7,16 @@ public class Cond_prob {
 	public Cond_prob(HashMap<Condition, Double> probability) {
 		this.probability = probability;
 	}
+	
+	public double cond_prob_by_value(String value) {
+		double added_value = 0.0;
+		for (Condition condition : probability.keySet()) {
+			added_value += probability.get(condition);
+			if (condition.is_condition_by_value(value))
+				return probability.get(condition);
+		}
+		return 1.0 - added_value;
+	}
 
 	@Override
 	public String toString() {
