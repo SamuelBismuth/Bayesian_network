@@ -19,33 +19,42 @@ public class Variable {
 		if (this.getParents() == null) {
 			//System.out.println("Variable" + this.getName());
 			//System.out.println("Value" + value);
-			return 1.0; // return getDouble();
+			//System.out.println(find_probability_by_value_for_lone_soldier(value));
+			return find_probability_by_value_for_lone_soldier(value);
 		}
 		//System.out.println("Variable" + this.getName());
 		//System.out.println("Value" + value);
-		//System.out.println("Parents" + this.getParents().toString());
 		//System.out.println("Probabilities" + probabilities.toString());
 		List<Probability> parent_value = this.match_parents(probabilities);
 		//System.out.println("Parent value" + parent_value.toString());
-		//System.out.println("#####################################");
 		System.out.println(find_value_by_condition(
 				new Condition(new Probability(this.getName(), value),
 						parent_value
 						)));
-		return name;
+		return find_value_by_condition(
+				new Condition(new Probability(this.getName(), value),
+						parent_value
+						));
 	}
 
-	private double find_value_by_condition(Condition condition_query) {
+	private double find_probability_by_value_for_lone_soldier(String value) {
+		double sum = 0;
 		for (Cond_prob cond_prob : this.getC_p()) {
 			for(Condition condition : cond_prob.getProbability().keySet()) {
-				//System.out.println("Condition" + condition.toString());
-				//System.out.println("condition query" + condition_query.toString());
-				if(condition_query.is_equal(condition)) {
-					System.out.println("hello");
+				if(condition.getVariable_probabilty().getVariable_value().equals(value))
 					return cond_prob.getProbability().get(condition);
-				}
+				sum += cond_prob.getProbability().get(condition);
 			}
 		}
+		return 1 - sum;
+	}
+
+	// TODO: The added value.
+	private double find_value_by_condition(Condition condition_query) {
+		for (Cond_prob cond_prob : this.getC_p()) 
+			for(Condition condition : cond_prob.getProbability().keySet()) 
+				if(condition_query.is_equal(condition)) 
+					return cond_prob.getProbability().get(condition);
 		return 0.0;
 
 	}

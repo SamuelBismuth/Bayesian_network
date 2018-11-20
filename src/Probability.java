@@ -9,6 +9,13 @@ public class Probability {
 		this.variable_value = variable_value;
 	}
 	
+	protected boolean is_equal(Probability probability) {
+		if (this.getVariable_name() == probability.getVariable_name() && 
+				this.getVariable_value().equals(probability.getVariable_value()))
+			return true;
+		return false;
+	}
+	
 	public char getVariable_name() {
 		return variable_name;
 	}

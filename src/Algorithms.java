@@ -1,14 +1,7 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Optional.of;
-import static java.util.stream.Collectors.toList;
 
 public class Algorithms {
 
@@ -37,7 +30,7 @@ public class Algorithms {
 		double answer = 0.0;
 		List<Variable> variables_not_on_the_query = network.not_on_the_query(probabilities);
 		if (variables_not_on_the_query.size() == 0) {
-			return network.calculate_probability(probabilities); // TODO: Change this.
+			return network.calculate_probability(probabilities); 
 		}
 		if (variables_not_on_the_query.size() == 1) {
 			return distribution(probabilities, 
