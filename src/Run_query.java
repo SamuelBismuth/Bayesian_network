@@ -5,8 +5,9 @@ public class Run_query {
 
 	public static List<String> run_queries(Network network) {
 		List<String> answers = new ArrayList<>();
-		for (Query query : network.getQueries())
+		for (Query query : network.getQueries()) {
 			answers.add(create_answer(network, query));
+		}
 		return answers;	
 	}
 

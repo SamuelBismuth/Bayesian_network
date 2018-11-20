@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Set;
 
 public class Condition {
 	
@@ -25,7 +26,6 @@ public class Condition {
 		return variable_dependencies;
 	}
 
-
 	@Override
 	public String toString() {
 		if(variable_dependencies == null) 
@@ -35,6 +35,23 @@ public class Condition {
 			answer += probability.toString();
 		return answer;
 	}
+
+	public boolean is_equal(Condition condition) {
+		if(is_equal_probability(this, condition))
+					//for(Condition condition : co) //to finish
+		
+		return false;
+	}	
 	
+	private boolean is_equal_probability(Condition condition1, Condition condition2) {
+		if (condition1.getVariable_probabilty().getVariable_name() == 
+				condition2.getVariable_probabilty().getVariable_name()) 
+			if (condition1.getVariable_probabilty().getVariable_value().equals(
+					condition2.getVariable_probabilty().getVariable_value())) 
+				if (condition2.getVariable_dependencies().size() ==
+						condition1.getVariable_dependencies().size()) 
+					return true;
+		return false;
+	}
 	
 }

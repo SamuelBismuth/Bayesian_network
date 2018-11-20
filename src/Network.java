@@ -26,12 +26,20 @@ public class Network {
 		return null;
 	}
 	
-	// TODO: Must for all the probabilities, see if there is a match between all the condition of the network.
-	public double find_probability_by_condition(List<Probability> probabilities) {
-		//for (Variable variable)
+	public double calculate_probability(List<Probability> probabilities) {
+		for(Probability probability : probabilities) {
+			Variable variable = find_variable_by_name(probability.getVariable_name());
+			variable.probability(probability.getVariable_value(), probabilities);
+		}
 		return 0.0;
 	}
 	
+
+	private void find_matches(List<Character> parents, List<Probability> probabilities) {
+		
+		// TODO Auto-generated method stub
+		
+	}
 
 	public List<Variable> getVariables() {
 		return variables;
