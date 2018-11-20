@@ -29,6 +29,14 @@ public class Variable {
 		return this.c_p;
 	}
 
+	public List<String> getValues() {
+		return values;
+	}
+
+	public List<Character> getParents() {
+		return parents;
+	}
+
 	@Override
 	public String toString() {
 		String answer = "Variable: " + name + "\n"
