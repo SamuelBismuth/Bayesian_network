@@ -11,6 +11,9 @@ public class Algorithms {
 	// ,
 	// 3: The number of multiplication.
 
+	static public int addition_sum 		  = 0,
+					  mulitiplication_sum = 0;
+	
 	/**
 	 * Bayes rules: P(A|B) = P(A, B) / P(B)
 	 * @param network
@@ -18,29 +21,29 @@ public class Algorithms {
 	 * @return
 	 */
 	public static String algorithm_1(Network network, Query query) {	
+		addition_sum = 0;
+		mulitiplication_sum = 0;
 		ArrayList<Probability> list_A = new ArrayList<Probability>(
 				query.getCondition().getVariable_dependencies());
 		list_A.add(query.getCondition().getVariable_probabilty());
-		double A = calculate_marginalisation(network, list_A);
-		double B = calculate_marginalisation(network, query.getCondition().getVariable_dependencies());
-		System.out.println("A: " + A);
-		System.out.println(B);
-		return Double.toString(A/B);
+		return Double.toString(calculate_marginalisation(network, list_A)
+				/ calculate_marginalisation(network, query.getCondition().
+						getVariable_dependencies())) + "," +
+				Integer.toString(addition_sum) + "," +
+				Integer.toString(mulitiplication_sum)	;
 	}
 
 	private static double calculate_marginalisation(Network network, List<Probability> probabilities) {
 		double answer = 0.0;
 		List<Variable> variables_not_on_the_query = network.not_on_the_query(probabilities);
-		if (variables_not_on_the_query.size() == 0) {
+		if (variables_not_on_the_query.size() == 0) 
 			return network.calculate_probability(probabilities); 
-		}
-		if (variables_not_on_the_query.size() == 1) {
+		if (variables_not_on_the_query.size() == 1) 
 			return distribution(probabilities, 
 					create_list_probabilities(
 							variables_not_on_the_query.get(0).getName(), 
 							variables_not_on_the_query.get(0).getValues()), 
 					network);
-		}
 		List<List<Probability>> list_list_probabilities = new ArrayList<List<Probability>>();
 		for(int i = 0; i < variables_not_on_the_query.size(); i++) 
 			list_list_probabilities.add(create_list_probabilities(
@@ -48,11 +51,11 @@ public class Algorithms {
 					variables_not_on_the_query.get(i).getValues()));
 		List<List<Probability>> joint_probability = cartesian_product(list_list_probabilities);
 		for (List<Probability> list_probability : joint_probability) { 
+			addition_sum++;
 			answer += network.calculate_probability(
 					Stream.concat(list_probability.stream(), probabilities.stream())
 					.collect(Collectors.toList()));
 		}
-		System.out.println("next");
 		return answer;
 	}
 

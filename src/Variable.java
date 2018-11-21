@@ -16,24 +16,10 @@ public class Variable {
 	}
 
 	public double probability(String value, List<Probability> probabilities) {
-		if (this.getParents() == null) {
-			System.out.println("Variable" + this.getName());
-			System.out.println("Value" + value);
-			System.out.println("Probabilities" + probabilities.toString());
-			System.out.println("Alone soldier");
-			System.out.println(find_probability_by_value_for_lone_soldier(value));
+		if (this.getParents() == null) 
 			return find_probability_by_value_for_lone_soldier(value);
-		}
 		else {
-			System.out.print("Variable" + this.getName());
-			System.out.println("Value" + value);
-			System.out.println("Probabilities" + probabilities.toString());
 			List<Probability> parent_value = this.match_parents(probabilities);
-			System.out.println("Parent value" + parent_value.toString());
-			System.out.println(find_value_by_condition(
-				new Condition(new Probability(this.getName(), value),
-						parent_value
-						)));
 			return find_value_by_condition(
 					new Condition(new Probability(this.getName(), value),
 							parent_value
@@ -55,11 +41,8 @@ public class Variable {
 
 	// TODO: Ask if possible to assume the cached value as the last value of the arrays.
 	private double find_value_by_condition(Condition condition_query) {
-		System.out.println(condition_query.getVariable_probabilty().getVariable_value());
-		System.out.println(this.values.get(values.size() - 1));
 		if (condition_query.getVariable_probabilty().getVariable_value()
 				.equals(this.values.get(values.size() - 1))) {
-			System.out.println();
 			double answer = 0.0;
 			for(int i = 0; i < values.size() - 1; i ++) {
 				answer += find_probability_by_condition(new Condition(
@@ -77,10 +60,8 @@ public class Variable {
 	private double find_probability_by_condition(Condition condition_query) {
 		for (Cond_prob cond_prob : this.getC_p()) 
 			for(Condition condition : cond_prob.getProbability().keySet()) 
-				if(condition.is_equal(condition_query)) {
-					System.out.println(condition.toString());
+				if(condition.is_equal(condition_query))
 					return cond_prob.getProbability().get(condition);
-				}
 		return 0.0;
 	}
 
