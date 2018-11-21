@@ -39,6 +39,12 @@ public class Condition {
 	    return (this.getVariable_probabilty().is_equal(condition.getVariable_probabilty())) &&
 	    		this.is_dependencies_equal(condition);
 	}
+	
+	public boolean is_cached_value(Condition condition) {
+		 return (this.getVariable_probabilty().getVariable_name() == 
+				 (condition.getVariable_probabilty().getVariable_name())) &&
+		    		this.is_dependencies_equal(condition);
+	}
 
 	protected boolean is_dependencies_equal(Condition condition) {
 		boolean step = true;
@@ -51,9 +57,6 @@ public class Condition {
 					step = true;
 			}
 		}
-		return true;
+		return step;
 	}
-
-
-
 }

@@ -27,13 +27,14 @@ public class Network {
 	}
 	
 	public double calculate_probability(List<Probability> probabilities) {
-		double answer = 0;
+		System.out.println("here" + probabilities.toString());
+		double answer = 1.0;
 		for(Probability probability : probabilities) {
 			Variable variable = find_variable_by_name(probability.getVariable_name());
-			System.out.println(probability.toString());
-			System.out.println(variable.probability(probability.getVariable_value(), probabilities));
-			answer += variable.probability(probability.getVariable_value(), probabilities);
+			System.out.println("prob" + variable.probability(probability.getVariable_value(), probabilities));
+			answer *= variable.probability(probability.getVariable_value(), probabilities);
 		}
+		System.out.println("##########################333");
 		return answer;
 	}
 

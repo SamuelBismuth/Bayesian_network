@@ -23,6 +23,8 @@ public class Algorithms {
 		list_A.add(query.getCondition().getVariable_probabilty());
 		double A = calculate_marginalisation(network, list_A);
 		double B = calculate_marginalisation(network, query.getCondition().getVariable_dependencies());
+		System.out.println("A: " + A);
+		System.out.println(B);
 		return Double.toString(A/B);
 	}
 
@@ -45,10 +47,12 @@ public class Algorithms {
 					variables_not_on_the_query.get(i).getName(), 
 					variables_not_on_the_query.get(i).getValues()));
 		List<List<Probability>> joint_probability = cartesian_product(list_list_probabilities);
-		for (List<Probability> list_probability : joint_probability) 
+		for (List<Probability> list_probability : joint_probability) { 
 			answer += network.calculate_probability(
 					Stream.concat(list_probability.stream(), probabilities.stream())
 					.collect(Collectors.toList()));
+		}
+		System.out.println("next");
 		return answer;
 	}
 
