@@ -1,9 +1,11 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author sam
  * This class represents the object conditional probability.
- * i.s CPT is the txt file.
+ * i.e CPT is the txt file.
  */
 public class Cond_prob {
 
@@ -35,4 +37,5 @@ public class Cond_prob {
 		}
 		return answer;
 	}
+
 }

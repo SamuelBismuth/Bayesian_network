@@ -9,7 +9,19 @@ public class Network {
 
 	private List<Variable> variables;
 	private List<Query> queries;
-	
+	private List<Factor> factors;
+
+	/**
+	 * Constructor.
+	 * @param variables
+	 * @param queries
+	 */
+	public Network(List<Variable> variables, List<Query> queries, List<Factor> factors) {
+		this.variables = variables;
+		this.queries = queries;
+		this.factors = factors;
+	}
+
 	/**
 	 * Constructor.
 	 * @param variables
@@ -19,7 +31,7 @@ public class Network {
 		this.variables = variables;
 		this.queries = queries;
 	}
-	
+
 	/**
 	 * This method return all the hidden variable.
 	 * @param probabilities
@@ -31,7 +43,7 @@ public class Network {
 			variables_not_on_the_query.remove(this.find_variable_by_name(probability.getVariable_name()));
 		return variables_not_on_the_query;
 	}
-	
+
 	/**
 	 * This function return the variable given the variable name.
 	 * @param variable_name
@@ -45,6 +57,17 @@ public class Network {
 		return null;
 	}
 	
+	protected List<Variable> find_variables_by_names(List<Character> variables_names) {
+		List<Variable> variables_by_names = new ArrayList<>();
+		for(Character variable : variables_names) 
+			variables_by_names.add(find_variable_by_name(variable));
+		return variables_by_names;
+	}
+
+	public List<Factor> getFactors() {
+		return factors;
+	}
+
 	/**
 	 * This function calculate the probability.
 	 * @param probabilities
@@ -59,6 +82,33 @@ public class Network {
 			answer *= variable.probability(probability.getVariable_value(), probabilities);
 		}
 		return answer;
+	}
+
+	/**
+	 * This method return all the dependencies variable given a list of variables.
+	 * @param variables
+	 * @return
+	 */
+	protected List<Variable> get_child(Variable variable) {
+		List<Variable> variable_dependent = new ArrayList<>();
+		for(Variable child : this.getVariables())
+			if(child.getParents() != null)
+				for (Character parent : child.getParents())
+					if (parent == variable.getName())
+						variable_dependent.add(child);
+		return variable_dependent;
+	}
+	
+	/**
+	 * This function return the searched variable of the query.
+	 * @param query
+	 * @return Variable.
+	 */
+	protected Variable get_searched_query(Query query) {
+		return find_variable_by_name(
+				query.getCondition().
+				getVariable_probabilty().
+				getVariable_name());
 	}
 
 	/**
@@ -77,6 +127,10 @@ public class Network {
 		return queries;
 	}
 
+	protected void setFactors(List<Factor> factors) {
+		this.factors = factors;
+	}
+
 	@Override
 	public String toString() {
 		String answer = "Network: \n";
@@ -86,5 +140,16 @@ public class Network {
 			answer += query.toString();
 		return answer;
 	}
-	
+
+	public void joinAll(List<Factor> factors) {
+		Factor current = factors.get(0);
+		for(int i = 1; i < factors.size(); i++) {
+			current = join(current, factors.get(i));
+		}
+	}
+
+	private Factor join(Factor factor, Factor factor2) {
+		return new Factor(factor.variable_union(factor2), factor.c_p_union(factor2), this);
+	}
+
 }

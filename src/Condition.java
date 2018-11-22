@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author sam
@@ -52,19 +54,19 @@ public class Condition {
 	 * @return true if equals, else false.
 	 */
 	protected boolean is_equal(Condition condition) {
-	    return (this.getVariable_probabilty().is_equal(condition.getVariable_probabilty())) &&
-	    		this.is_dependencies_equal(condition);
+		return (this.getVariable_probabilty().is_equal(condition.getVariable_probabilty())) &&
+				this.is_dependencies_equal(condition);
 	}
-	
+
 	/**
 	 * This method check if the condition is the inverse of the second condition.
 	 * @param condition
 	 * @return true if inverse else false.
 	 */
 	protected boolean is_cached_value(Condition condition) {
-		 return (this.getVariable_probabilty().getVariable_name() == 
-				 (condition.getVariable_probabilty().getVariable_name())) &&
-		    		this.is_dependencies_equal(condition);
+		return (this.getVariable_probabilty().getVariable_name() == 
+				(condition.getVariable_probabilty().getVariable_name())) &&
+				this.is_dependencies_equal(condition);
 	}
 
 	/**
@@ -85,7 +87,7 @@ public class Condition {
 		}
 		return step;
 	}
-	
+
 	@Override
 	public String toString() {
 		if(variable_dependencies == null) 
@@ -94,5 +96,24 @@ public class Condition {
 		for(Probability probability: variable_dependencies) 
 			answer += probability.toString();
 		return answer;
+	}
+
+	protected List<Character> get_variable() {
+		if (this.getVariable_dependencies() == null) {
+			List<Character> ans = new ArrayList<>();
+			ans.add(this.getVariable_probabilty().getVariable_name());
+			return ans;
+		}
+		List<Character> variables = new ArrayList<>();
+		variables.add(this.getVariable_probabilty().getVariable_name());
+		for (Probability probability : this.getVariable_dependencies())
+			variables.add(probability.getVariable_name());
+		return variables;
+	}
+	
+	public List<Character> match_variable(Condition cond2) {
+		return this.get_variable().stream().
+				filter(cond2.get_variable()::contains).
+				collect(Collectors.toList());
 	}
 }

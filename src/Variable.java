@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author sam
@@ -165,4 +168,15 @@ public class Variable {
 		answer += c_p.toString();
 		return answer;
 	}
+
+	public List<Variable> get_side_variable(Network network) {
+		if(this.getParents() == null)
+			return Collections.singletonList(this);
+		return  Stream.concat(
+				network.find_variables_by_names(this.getParents()).stream(), 
+				Collections.singletonList(
+						this).stream()).
+				collect(Collectors.toList());
+	}
+
 }

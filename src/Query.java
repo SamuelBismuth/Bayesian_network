@@ -1,3 +1,8 @@
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * @author sam
  * This class represents the object Query.
@@ -24,7 +29,15 @@ public class Query {
 	public Condition getCondition() {
 		return condition;
 	}
-
+	
+	protected List<Probability> get_all() {
+		return Stream.concat(
+				this.getCondition().getVariable_dependencies().stream(), 
+				Collections.singletonList(
+						this.getCondition().getVariable_probabilty()).stream()).
+				collect(Collectors.toList());
+	}
+	
 	/**
 	 * Get the algorithm.
 	 * @return the algorithm.
