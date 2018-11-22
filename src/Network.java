@@ -29,7 +29,7 @@ public class Network {
 	public double calculate_probability(List<Probability> probabilities) {
 		double answer = 1.0;
 		for(Probability probability : probabilities) {
-			Algorithms.mulitiplication_sum++;
+			Algorithms.mulitiplication_counter++;
 			Variable variable = find_variable_by_name(probability.getVariable_name());
 			answer *= variable.probability(probability.getVariable_value(), probabilities);
 		}

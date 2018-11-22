@@ -73,6 +73,12 @@ public class Variable {
 					answer.add(probability);
 		return answer;
 	}
+	
+	public List<String> get_inverse(String value) {
+		List<String> values_inverse = new ArrayList<>(this.values);
+		values_inverse.remove(value);
+		return values_inverse;
+	}
 
 	public char getName() {
 		return this.name;
