@@ -6,17 +6,22 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * @author sam
+ * This class is a library (only static function).
+ * Here all the functions which convert the txt into objects.
+ * TODO: Change the variable name into String.
+ * TODO: Worried about type error.
+ */
 public class From_txt_to_object {
 	
 	/**
-	 * Can we assume that the txt is always with the same format?
-	 * -> Include space and space, and even comma.
-	 * Can we assume the variable's name with a character?
+	 * This method create the network from the txt.
 	 * @param list_txt
-	 * @return
+	 * @return The network.
 	 * @throws Wrong_txt
 	 */
-	public static Network create_network(List<String> list_txt) {
+	protected static Network create_network(List<String> list_txt) {
 		try {
 			verifying_txt(list_txt.iterator());
 		} catch (Wrong_txt e) {
@@ -39,6 +44,11 @@ public class From_txt_to_object {
 		return new Network(variables, queries);
 	}
 
+	/**
+	 * This function create the Query.
+	 * @param string_query
+	 * @return the query.
+	 */
 	private static Query create_query(String string_query) {
 		String[] string_splited = string_query.split("\\|");
 		Probability variable_probability = create_probability(string_splited[0].
@@ -52,11 +62,21 @@ public class From_txt_to_object {
 				string_query.charAt(string_query.length() - 1));
 	}
 
+	/**
+	 * This method create a new Probability.
+	 * @param variable
+	 * @return the Probability.
+	 */
 	private static Probability create_probability(String variable) {
 		String[] string_splited = variable.split("=");
 		return new Probability(string_splited[0].charAt(0), string_splited[1]);
 	}
 
+	/**
+	 * This function create the Variable.
+	 * @param it
+	 * @return the Variable.
+	 */
 	private static Variable create_variable(Iterator<String> it) {
 		char variable_name =  it.next().charAt(4);
 		List<String> values = create_values(it.next()); 
@@ -71,7 +91,17 @@ public class From_txt_to_object {
 		return new Variable(variable_name, values, parents, c_p);
 	}
 
-	private static Cond_prob create_cond_prob(char variable_name, String string_cond_prob, List<Character> parents) {
+	/**
+	 * This method create the CPT.
+	 * @param variable_name
+	 * @param string_cond_prob
+	 * @param parents
+	 * @return the CPT.
+	 */
+	private static Cond_prob create_cond_prob(
+			char variable_name,
+			String string_cond_prob,
+			List<Character> parents) {
 		Iterator<Character> it_cond_prob = from_string_to_iterator(string_cond_prob);
 		List<Probability> dependencies = create_dependencies(it_cond_prob, parents);
 		HashMap<Condition, Double> probability = new HashMap<>();
@@ -80,6 +110,11 @@ public class From_txt_to_object {
 		return new Cond_prob(probability);
 	}
 
+	/**
+	 * This function create the double which is the answer of the probability.
+	 * @param it_cond_prob
+	 * @return the double.
+	 */
 	private static Double create_double(Iterator<Character> it_cond_prob) {
 		String double_string = "";
 		char character = it_cond_prob.next();
@@ -94,8 +129,17 @@ public class From_txt_to_object {
 		return Double.parseDouble(double_string);
 	}
 
-	private static Condition create_condition(char variable_name, Iterator<Character> it_cond_prob, 
-											  List<Probability> dependencies) {
+	/**
+	 * This function create the condition.
+	 * @param variable_name
+	 * @param it_cond_prob
+	 * @param dependencies
+	 * @return the Condition.
+	 */
+	private static Condition create_condition(
+			char variable_name, 
+			Iterator<Character> it_cond_prob, 
+			List<Probability> dependencies) {
 		String value = "";
 		char character = it_cond_prob.next();
 		while(character != ',') {
@@ -106,8 +150,15 @@ public class From_txt_to_object {
 		return new Condition(new Probability(variable_name, value), dependencies);
 	}
 
-	private static List<Probability> create_dependencies(Iterator<Character> it_cond_prob, 
-														 List<Character> parents) {
+	/**
+	 * This method create the dependencies.
+	 * @param it_cond_prob
+	 * @param parents
+	 * @return list of Probability.
+	 */
+	private static List<Probability> create_dependencies(
+			Iterator<Character> it_cond_prob, 
+			List<Character> parents) {
 		if(parents == null)
 			return null;
 		List<Probability> dependencies = new ArrayList<>();
@@ -126,6 +177,11 @@ public class From_txt_to_object {
 		return dependencies;
 	}
 
+	/**
+	 * This method create the parent.
+	 * @param string_parents
+	 * @return list of Character which are the parent.
+	 */
 	private static List<Character> create_parents(String string_parents) {
 		if(string_parents.contains("none"))
 			return null;
@@ -136,6 +192,11 @@ public class From_txt_to_object {
 		return parents;
 	}
 
+	/**
+	 * This function create the values.
+	 * @param string_values
+	 * @return a list of String (the values).
+	 */
 	private static List<String> create_values(String string_values) {
 		List<String> values = new ArrayList<>();
 		String value = "";
@@ -151,6 +212,12 @@ public class From_txt_to_object {
 		return values;
 	}
 	
+	/**
+	 * This method check roughly the format of the txt.
+	 * TODO: Need to improve the checking.
+	 * @param iterator
+	 * @throws Wrong_txt
+	 */
 	private static void verifying_txt(Iterator<String> iterator) throws Wrong_txt {
 		if(!iterator.next().contains("Network"))
 			throw new Wrong_txt("The file doesn't begin with Network...");
@@ -163,6 +230,11 @@ public class From_txt_to_object {
 		throw new Wrong_txt("The file doesn't include Queries...");
 	}
 	
+	/**
+	 * This method convert a string to an iterator char-char.
+	 * @param string
+	 * @return the iterator.
+	 */
 	private static Iterator<Character> from_string_to_iterator(String string) {
 		char[] array = string.toCharArray();
 		Stream<Character> myStreamOfCharacters = IntStream

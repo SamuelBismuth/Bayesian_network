@@ -1,14 +1,27 @@
 import java.util.HashMap;
 
+/**
+ * @author sam
+ * This class represents the object conditional probability.
+ * i.s CPT is the txt file.
+ */
 public class Cond_prob {
 
 	private HashMap<Condition, Double> probability;  // HashMap:  condition -> probability.
 
+	/**
+	 * Constructor.
+	 * @param probability
+	 */
 	public Cond_prob(HashMap<Condition, Double> probability) {
 		this.probability = probability;
 	}
 
-	public HashMap<Condition, Double> getProbability() {
+	/**
+	 * Get probability.
+	 * @return probability.
+	 */
+	protected HashMap<Condition, Double> getProbability() {
 		return probability;
 	}
 

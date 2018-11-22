@@ -1,29 +1,32 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author sam
+ * Class Algorithms.
+ * This class includes only static method (library).
+ * The three main methods are the three implemented algorithms.
+ * Each algorithm answer to a query of the format: P(A|B,C).
+ * To answer to all the query we have a Bayesian Network already build.
+ * Here is the format for the answer:
+ * 
+ * 1: The result rounded five numbers after the point.
+ *  ,
+ * 2: The number of addition.
+ * ,
+ * 3: The number of multiplication.
+ */
 public class Algorithms {
 
-	/**
-	 * Class Algorithms.
-	 * This class includes only static method (library).
-	 * The three main methods are the three implemented algorithms.
-	 * Each algorithm answer to a query of the format: P(A|B,C).
-	 * To answer to all the query we have a Bayesian Network already build.
-	 * Here is the format for the answer:
-	 * 
-	 * 1: The result rounded five numbers after the point.
-	 *  ,
-	 * 2: The number of addition.
-	 * ,
-	 * 3: The number of multiplication.
-	 */
-
 	// Two static variable counter.
-	static public int addition_counter 		  = 0,
-					  mulitiplication_counter = 0;
+	static protected int addition_counter 		 = 0,
+					     mulitiplication_counter = 0;
+	// The format for the round.
+	static DecimalFormat df = new DecimalFormat("#0.00000");
 
 	/**
 	 * This function implements the steps of the algorithm 1.
@@ -32,20 +35,21 @@ public class Algorithms {
 	 * @param query
 	 * @return the result of the query including the counter in the well form.
 	 */
-	public static String algorithm_1(Network network, Query query) {	
+	protected static String algorithm_1(Network network, Query query) {	
 		addition_counter = mulitiplication_counter = 0; 
 		double Y1 = prepare_marginalization(
 				network, 
 				Stream.concat(
-					query.getCondition().getVariable_dependencies().stream(), 
-					Collections.singletonList(
-						query.getCondition().getVariable_probabilty()).stream()).
+						query.getCondition().getVariable_dependencies().stream(), 
+						Collections.singletonList(
+								query.getCondition().getVariable_probabilty()).stream()).
 				collect(Collectors.toList()));
 		double Y2 = calculate_inverse_marginalization(
 				network, 
 				query.getCondition().getVariable_dependencies(),
 				query.getCondition().getVariable_probabilty());
-		return Double.toString((1 / (Y1 + Y2))* Y1) + "," +
+		addition_counter++;
+		return df.format((1 / (Y1 + Y2)) * Y1) + "," +
 		Integer.toString(addition_counter) + "," +
 		Integer.toString(mulitiplication_counter);
 	}
@@ -71,17 +75,17 @@ public class Algorithms {
 		for (String value : values) {
 			addition_counter++;
 			answer += prepare_marginalization(
-				network, 
-				Stream.concat(
-					variable_dependencies.stream(), 
-					Collections.singletonList(
-						new Probability(variable_probabilty.getVariable_name(),
-							value)).stream()).
-				collect(Collectors.toList()));
+					network, 
+					Stream.concat(
+							variable_dependencies.stream(), 
+							Collections.singletonList(
+									new Probability(variable_probabilty.getVariable_name(),
+											value)).stream()).
+					collect(Collectors.toList()));
 		}
 		return answer;
 	}
-	
+
 	/**
 	 * This function prepare our query for the marginalization.
 	 * i.e, it is format our query from P(A|B,C) to P(A,B,C,E).
@@ -106,21 +110,6 @@ public class Algorithms {
 				cartesian_product(create_list_list(variables_not_on_the_query)),
 				probabilities);
 	}
-	
-	/**
-	 * The method implements a list of a list for the cartesian product.
-	 * @param variables_not_on_the_query
-	 * @return a list of a list of probability.
-	 */
-	private static List<List<Probability>> create_list_list(
-			List<Variable> variables_not_on_the_query) {
-		List<List<Probability>> list_list_probabilities = new ArrayList<List<Probability>>();
-		for(int i = 0; i < variables_not_on_the_query.size(); i++) 
-			list_list_probabilities.add(create_list_probabilities(
-					variables_not_on_the_query.get(i).getName(), 
-					variables_not_on_the_query.get(i).getValues()));
-		return list_list_probabilities;
-	}
 
 	/**
 	 * This function calculate the marginalization given the probability 
@@ -143,7 +132,7 @@ public class Algorithms {
 		}
 		return answer;
 	}
-	
+
 	/**
 	 * This method is used when there is no need to proceed a Cartesian product.
 	 * That means when there is only one hidden variable.
@@ -162,11 +151,26 @@ public class Algorithms {
 			answer += network.calculate_probability(Stream.concat(
 					probabilities.stream(), 
 					Collections.singletonList(probability).stream()).
-				collect(Collectors.toList()));
+					collect(Collectors.toList()));
 		}
 		return answer;
 	}
 
+	/**
+	 * The method implements a list of a list for the cartesian product.
+	 * @param variables_not_on_the_query
+	 * @return a list of a list of probability.
+	 */
+	private static List<List<Probability>> create_list_list(
+			List<Variable> variables_not_on_the_query) {
+		List<List<Probability>> list_list_probabilities = new ArrayList<List<Probability>>();
+		for(int i = 0; i < variables_not_on_the_query.size(); i++) 
+			list_list_probabilities.add(create_list_probabilities(
+					variables_not_on_the_query.get(i).getName(), 
+					variables_not_on_the_query.get(i).getValues()));
+		return list_list_probabilities;
+	}
+	
 	/**
 	 * This method do a Cartesian product for two given list.
 	 * This method is implemented from: 
@@ -207,12 +211,12 @@ public class Algorithms {
 		return probabilities;
 	}
 
-	
-	public static String algorithm_2(Network network, Query query) {
+
+	protected static String algorithm_2(Network network, Query query) {
 		return null;
 	}
 
-	public static String algorithm_3(Network network, Query query) {
+	protected static String algorithm_3(Network network, Query query) {
 		return null;
 	}
 

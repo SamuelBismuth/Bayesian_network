@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author sam
+ * This class is a junit test fot the function is equal of the class condition.
+ */
 class ConditionTest {
 
 	@Test
