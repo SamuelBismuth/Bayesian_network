@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,6 +66,46 @@ public class Factor {
 		return this;
 	}
 
+	public Factor join(Factor fac2) {
+		List<Variable> variables = Stream.concat(this.getVariables().stream(), 
+				fac2.getVariables().stream()).distinct().collect(Collectors.toList());
+		// Cartesian product.
+		List<List<Probability>> new_factor = 
+				Algorithms.cartesian_product(Algorithms.create_list_list(variables));
+		List<Cond_prob> cp = new ArrayList<>();
+		for (List<Probability> line : new_factor) {
+			double one = fac2.get_match(line);
+			double two = this.get_match(line);
+			HashMap<Condition, Double> probability = new HashMap<>();
+			probability.put(new Condition(line), one * two);
+			cp.add(new Cond_prob(probability));
+		}
+		return new Factor(variables, cp);
+	}
+
+	private double get_match(List<Probability> line) {
+		for(Cond_prob cp : this.getC_p()) 
+			for(Condition cond : cp.getProbability().keySet()) 
+				if (are_equal(cond, line)) 
+					return cp.getProbability().get(cond);
+		return 0;
+	}
+	
+	private boolean are_equal(Condition cond, List<Probability> line) {
+		for(Probability probability : cond.get_all()) {
+			if(!contain(line, probability)) 
+				return false;
+		}
+		return true;
+	}
+
+	private boolean contain(List<Probability> line, Probability probability) {
+		for (Probability line_prob : line) 
+			if (line_prob.getVariable_value().equals(probability.getVariable_value())
+					&& line_prob.getVariable_name() == probability.getVariable_name())
+				return true;
+		return false;
+	}
 }
 
 class Factor_comparator implements Comparator<Factor> {

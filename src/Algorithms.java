@@ -1,9 +1,7 @@
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -157,7 +155,7 @@ public class Algorithms {
 	 * @param variables_not_on_the_query
 	 * @return a list of a list of probability.
 	 */
-	private static List<List<Probability>> create_list_list(
+	protected static List<List<Probability>> create_list_list(
 			List<Variable> variables_not_on_the_query) {
 		List<List<Probability>> list_list_probabilities = new ArrayList<List<Probability>>();
 		for(int i = 0; i < variables_not_on_the_query.size(); i++) 

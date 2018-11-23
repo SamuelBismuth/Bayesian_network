@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class Factors {
 
@@ -16,13 +17,11 @@ public class Factors {
 
 	public void run() {
 		for(Variable variable : variable_factors) {
-			join(variable);
+			Factor factor = unionAll(match(variable), variable);  // join.
+			System.out.println(factor);
 			eliminate(variable);
+			System.out.println("#################");
 		}
-	}
-
-	private void join(Variable variable) {
-		unionAll(match(variable), variable);
 	}
 
 	private List<Factor> match(Variable variable) {
@@ -33,11 +32,13 @@ public class Factors {
 		return factors;
 	}
 
-	private void unionAll(List<Factor> factors, Variable variable) {
+	private Factor unionAll(List<Factor> factors, Variable variable) {
 		while(factors.size() > 1) {
 			Collections.sort(factors, new Factor_comparator());
-			union(factors.get(0), factors.get(1), variable);
+			factors.set(0, union(factors.get(0), factors.get(1), variable));
+			factors.remove(1);
 		}
+		return factors.get(0);
 	}
 	
 	/**
@@ -46,8 +47,14 @@ public class Factors {
 	 * @param fac2
 	 * @param variable
 	 */
-	private void union(Factor fac1, Factor fac2, Variable variable) {
-		for(Cond_prob cp : fac1.getC_p());
+	private Factor union(Factor fac1, Factor fac2, Variable variable) {
+		for(Cond_prob cp1 : fac1.getC_p()) 
+			for(Cond_prob cp2 : fac2.getC_p()) 
+				for(Condition condition1 : cp1.getProbability().keySet()) 
+					for(Condition condition2 : cp2.getProbability().keySet()) 
+						if (condition1.in_common(condition2, variable)) 
+							fac1 = fac1.join(fac2);	
+		return fac1;
 	}
 
 	private void eliminate(Variable variable) {

@@ -85,7 +85,7 @@ public class From_txt_to_object {
 		List<Cond_prob> c_p = new ArrayList<>();
 		String line = it.next();
 		while(!line.trim().isEmpty()) {
-			c_p.add(create_cond_prob(variable_name, line, parents));
+			c_p.add(create_cond_prob(variable_name, line, parents, values.get(values.size() - 1)));
 			line = it.next();
 		}
 		return new Variable(variable_name, values, parents, c_p);
@@ -101,12 +101,22 @@ public class From_txt_to_object {
 	private static Cond_prob create_cond_prob(
 			char variable_name,
 			String string_cond_prob,
-			List<Character> parents) {
+			List<Character> parents,
+			String hidden_value) {
 		Iterator<Character> it_cond_prob = from_string_to_iterator(string_cond_prob);
 		List<Probability> dependencies = create_dependencies(it_cond_prob, parents);
 		HashMap<Condition, Double> probability = new HashMap<>();
-		while(it_cond_prob.hasNext()) 
-			probability.put(create_condition(variable_name, it_cond_prob, dependencies), create_double(it_cond_prob));
+		double sum = 0.0;
+		while(it_cond_prob.hasNext()) {
+			Condition c = create_condition(variable_name, it_cond_prob, dependencies);
+			double d = create_double(it_cond_prob);
+			sum += d;
+			probability.put(c, d);
+		}
+		probability.put(new Condition(
+				new Probability(variable_name, hidden_value), 
+				dependencies), 
+				(1 - sum));
 		return new Cond_prob(probability);
 	}
 
