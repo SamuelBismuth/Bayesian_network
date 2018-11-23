@@ -1,7 +1,4 @@
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author sam
@@ -11,7 +8,7 @@ public class Query {
 	
 	private Condition condition;
 	private char algorithm;
-
+	
 	/**
 	 * Constructor.
 	 * @param condition
@@ -30,12 +27,19 @@ public class Query {
 		return condition;
 	}
 	
-	protected List<Probability> get_all() {
-		return Stream.concat(
-				this.getCondition().getVariable_dependencies().stream(), 
-				Collections.singletonList(
-						this.getCondition().getVariable_probabilty()).stream()).
-				collect(Collectors.toList());
+	protected Variable get_main_variable(Network network) {
+		return network.find_variable_by_name(
+				this.getCondition().
+				getVariable_probabilty().
+				getVariable_name());
+	}
+	
+	protected List<Variable> get_all_variable(Network network) {
+		return network.find_variables_by_names(this.getCondition().get_variable());
+	}
+	
+	protected List<Probability> get_all_probability() {
+		return this.getCondition().get_all();
 	}
 	
 	/**

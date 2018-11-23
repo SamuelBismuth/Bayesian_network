@@ -39,7 +39,7 @@ public class Algorithms {
 	 */
 	protected static String algorithm_1(Network network, Query query) {	
 		addition_counter = mulitiplication_counter = 0; 
-		double Y1 = prepare_marginalization(network, query.get_all());
+		double Y1 = prepare_marginalization(network, query.get_all_probability());
 		double Y2 = calculate_inverse_marginalization(
 				network, 
 				query.getCondition().getVariable_dependencies(),
@@ -214,40 +214,18 @@ public class Algorithms {
 	 * @return the result of the query including the counter in the well form.
 	 */
 	protected static String algorithm_2(Network network, Query query) {
-		List<Variable> variables_not_on_the_query = network.not_on_the_query(query.get_all());
-		create_factors(network, query, variables_not_on_the_query);
-		for (Variable variable : variables_not_on_the_query) {
-			network.joinAll(dependent_factors(variable, network));
-		}
+		Factors factors = network.create_factors(get_factors_variable(network, query), 
+				network.get_searched_query(query));
+		factors.run();
 		return null;
 	}
 	
-	private static List<Factor> dependent_factors(Variable variable, Network network) {
-		List<Factor> factors = new ArrayList<>();
-		for (Factor factor : network.getFactors())
-			if (factor.contains(variable))
-				factors.add(factor);
+	private static List<Variable> get_factors_variable(Network network, Query query) {
+		List<Variable> factors = 
+				network.not_on_the_query(query.get_all_probability());
+		factors.add(network.get_searched_query(query));
 		return factors;
 	}
-
-	private static void create_factors(Network network, Query query, List<Variable> variables_not_on_the_query) {
-		Set<Variable> set_variable = new HashSet<>(variables_not_on_the_query);
-		for(Variable variable : variables_not_on_the_query) 
-			set_variable.addAll(network.get_child(variable));
-		set_variable.add(network.get_searched_query(query));
-		create_factors(set_variable, network);
-		System.out.println("##############################3");
-	}
-
-	private static List<Factor> create_factors(Set<Variable> variables, Network network) {
-		List<Factor> factors = new ArrayList<>();
-		for(Variable variable : variables) 
-			factors.add(new Factor(variable.get_side_variable(network), variable.getC_p(), network));
-		network.setFactors(factors);
-		//System.out.println(network.getFactors().toString());
-		return null;
-	}
-
 
 	protected static String algorithm_3(Network network, Query query) {
 		return null;

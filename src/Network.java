@@ -1,5 +1,10 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author sam
@@ -9,18 +14,6 @@ public class Network {
 
 	private List<Variable> variables;
 	private List<Query> queries;
-	private List<Factor> factors;
-
-	/**
-	 * Constructor.
-	 * @param variables
-	 * @param queries
-	 */
-	public Network(List<Variable> variables, List<Query> queries, List<Factor> factors) {
-		this.variables = variables;
-		this.queries = queries;
-		this.factors = factors;
-	}
 
 	/**
 	 * Constructor.
@@ -56,16 +49,12 @@ public class Network {
 		}
 		return null;
 	}
-	
+
 	protected List<Variable> find_variables_by_names(List<Character> variables_names) {
 		List<Variable> variables_by_names = new ArrayList<>();
 		for(Character variable : variables_names) 
 			variables_by_names.add(find_variable_by_name(variable));
 		return variables_by_names;
-	}
-
-	public List<Factor> getFactors() {
-		return factors;
 	}
 
 	/**
@@ -86,6 +75,7 @@ public class Network {
 
 	/**
 	 * This method return all the dependencies variable given a list of variables.
+	 * TODO: BFS???!!!
 	 * @param variables
 	 * @return
 	 */
@@ -98,7 +88,7 @@ public class Network {
 						variable_dependent.add(child);
 		return variable_dependent;
 	}
-	
+
 	/**
 	 * This function return the searched variable of the query.
 	 * @param query
@@ -127,10 +117,6 @@ public class Network {
 		return queries;
 	}
 
-	protected void setFactors(List<Factor> factors) {
-		this.factors = factors;
-	}
-
 	@Override
 	public String toString() {
 		String answer = "Network: \n";
@@ -141,15 +127,35 @@ public class Network {
 		return answer;
 	}
 
-	public void joinAll(List<Factor> factors) {
-		Factor current = factors.get(0);
-		for(int i = 1; i < factors.size(); i++) {
-			current = join(current, factors.get(i));
+	/**
+	 * Maybe no need child of the main variable? 
+	 * @param get_factors_variable
+	 * @return
+	 */
+	public Factors create_factors(List<Variable> get_factors_variable, Variable query) {
+		Set<Variable> set_variable = new HashSet<>(get_factors_variable);
+		for(Variable variable : get_factors_variable) 
+			set_variable.addAll(this.get_child(variable));
+		List<Factor> factors = new ArrayList<>();
+		for(Variable variable : set_variable) {
+			factors.add(new Factor(
+					this.get_side_variable(variable)
+					.stream().filter(get_factors_variable::contains).collect(Collectors.toList()),
+					variable.getC_p()
+					));
 		}
+		get_factors_variable.remove(query);
+		return new Factors(factors, get_factors_variable, query);
 	}
 
-	private Factor join(Factor factor, Factor factor2) {
-		return new Factor(factor.variable_union(factor2), factor.c_p_union(factor2), this);
+	private List<Variable> get_side_variable(Variable variable) {
+		if(variable.getParents() == null)
+			return Collections.singletonList(variable);
+		return  Stream.concat(
+				this.find_variables_by_names(variable.getParents()).stream(), 
+				Collections.singletonList(
+						variable).stream()).
+				collect(Collectors.toList());
 	}
 
 }

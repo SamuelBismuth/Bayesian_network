@@ -169,14 +169,6 @@ public class Variable {
 		return answer;
 	}
 
-	public List<Variable> get_side_variable(Network network) {
-		if(this.getParents() == null)
-			return Collections.singletonList(this);
-		return  Stream.concat(
-				network.find_variables_by_names(this.getParents()).stream(), 
-				Collections.singletonList(
-						this).stream()).
-				collect(Collectors.toList());
-	}
+	
 
 }

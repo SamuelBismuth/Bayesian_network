@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -8,14 +9,13 @@ import java.util.stream.Stream;
  */
 public class Factor {
 
+	// Here we need to chheck all the matches.
 	private List<Variable> variables;
 	private List<Cond_prob> c_p;
-	private Network network;
 
-	public Factor(List<Variable> variables, List<Cond_prob> c_p, Network network) {
+	public Factor(List<Variable> variables, List<Cond_prob> c_p) {
 		this.variables = variables;
 		this.c_p = c_p;
-		this.network = network;
 	}
 
 	public List<Variable> getVariables() {
@@ -48,27 +48,7 @@ public class Factor {
 		return this.getVariables().contains(variable);
 	}
 
-	protected List<Cond_prob> c_p_union(Factor factor) {
-		return merge_table(this.minimum_variable(factor), this.maximum_variable(factor));
-	}
-
-	private List<Cond_prob> merge_table(Factor minimum_factor, Factor maximum_factor) {
-		System.out.println(minimum_factor);
-		System.out.println(maximum_factor);
-		List<Variable> variables_match = match_variable(
-						(Condition) maximum_factor.getC_p().get(0).getProbability().keySet().toArray()[0], 
-						(Condition) minimum_factor.getC_p().get(0).getProbability().keySet().toArray()[0]);
-		for(Cond_prob c_p : maximum_factor.getC_p()) {
-			
-		}
-		return null;
-	}
-
-	private List<Variable> match_variable(Condition cond1, Condition cond2) {
-		return network.find_variables_by_names(cond1.match_variable(cond2));
-	}
-
-	private Factor maximum_variable(Factor factor) {
+	protected Factor maximum_variable(Factor factor) {
 		if(factor.getVariables().size() == this.getVariables().size())
 			return this;
 		if(factor.getVariables().size() > this.getVariables().size())
@@ -76,11 +56,22 @@ public class Factor {
 		return this;
 	}
 
-	private Factor minimum_variable(Factor factor) {
+	protected Factor minimum_variable(Factor factor) {
 		if(factor.getVariables().size() == this.getVariables().size())
 			return factor;
 		if(factor.getVariables().size() < this.getVariables().size())
 			return factor;
 		return this;
 	}
+
+}
+
+class Factor_comparator implements Comparator<Factor> {
+
+	@Override
+	public int compare(Factor o1, Factor o2) {
+		return o1.getC_p().size() < o2.getC_p().size() ? 1 : 
+			o1.getC_p().size() == o2.getC_p().size() ? -0 : -1;
+	}
+
 }

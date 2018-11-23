@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author sam
@@ -114,6 +116,14 @@ public class Condition {
 	public List<Character> match_variable(Condition cond2) {
 		return this.get_variable().stream().
 				filter(cond2.get_variable()::contains).
+				collect(Collectors.toList());
+	}
+	
+	protected List<Probability> get_all() {
+		return Stream.concat(
+				this.getVariable_dependencies().stream(),
+				Collections.singletonList(
+						this.getVariable_probabilty()).stream()).
 				collect(Collectors.toList());
 	}
 }

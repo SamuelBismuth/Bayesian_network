@@ -4,7 +4,6 @@
  */
 public class Probability {
 
-
 	private char variable_name;
 	private String variable_value;
 
