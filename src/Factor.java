@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  */
 public class Factor {
 
-	// Here we need to chheck all the matches.
+	// Here we need to check all the matches.
 	private List<Variable> variables;
 	private List<Cond_prob> c_p;
 

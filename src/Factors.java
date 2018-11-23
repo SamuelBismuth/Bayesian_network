@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class Factors {
 
@@ -19,7 +18,9 @@ public class Factors {
 		for(Variable variable : variable_factors) {
 			Factor factor = unionAll(match(variable), variable);  // join.
 			System.out.println(factor);
-			eliminate(variable);
+			factor = eliminate(variable); // TODO: implement this. error null pointer from here.
+			factors.removeAll(match(variable));
+			factors.add(factor);
 			System.out.println("#################");
 		}
 	}
@@ -35,30 +36,14 @@ public class Factors {
 	private Factor unionAll(List<Factor> factors, Variable variable) {
 		while(factors.size() > 1) {
 			Collections.sort(factors, new Factor_comparator());
-			factors.set(0, union(factors.get(0), factors.get(1), variable));
+			factors.set(0, factors.get(0).join( factors.get(1)));
 			factors.remove(1);
 		}
 		return factors.get(0);
 	}
-	
-	/**
-	 * TODO: HERE WE ARE.
-	 * @param fac1
-	 * @param fac2
-	 * @param variable
-	 */
-	private Factor union(Factor fac1, Factor fac2, Variable variable) {
-		for(Cond_prob cp1 : fac1.getC_p()) 
-			for(Cond_prob cp2 : fac2.getC_p()) 
-				for(Condition condition1 : cp1.getProbability().keySet()) 
-					for(Condition condition2 : cp2.getProbability().keySet()) 
-						if (condition1.in_common(condition2, variable)) 
-							fac1 = fac1.join(fac2);	
-		return fac1;
-	}
 
-	private void eliminate(Variable variable) {
-
+	private Factor eliminate(Variable variable) {
+		return null;
 	}
 
 	public List<Factor> getFactors() {
@@ -72,7 +57,5 @@ public class Factors {
 	public Variable getQuery() {
 		return query;
 	}
-
-
 
 }
