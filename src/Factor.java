@@ -86,25 +86,9 @@ public class Factor {
 	private double get_match(List<Probability> line) {
 		for(Cond_prob cp : this.getC_p()) 
 			for(Condition cond : cp.getProbability().keySet()) 
-				if (are_equal(cond, line)) 
+				if (Algorithms.are_equal(cond, line)) 
 					return cp.getProbability().get(cond);
 		return 0;
-	}
-	
-	private boolean are_equal(Condition cond, List<Probability> line) {
-		for(Probability probability : cond.get_all()) {
-			if(!contain(line, probability)) 
-				return false;
-		}
-		return true;
-	}
-
-	private boolean contain(List<Probability> line, Probability probability) {
-		for (Probability line_prob : line) 
-			if (line_prob.getVariable_value().equals(probability.getVariable_value())
-					&& line_prob.getVariable_name() == probability.getVariable_name())
-				return true;
-		return false;
 	}
 }
 

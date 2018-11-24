@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -132,20 +134,46 @@ public class Network {
 	 * @param get_factors_variable
 	 * @return
 	 */
-	public Factors create_factors(List<Variable> get_factors_variable, Variable query) {
+	public Factors create_factors(
+			List<Variable> get_factors_variable,
+			Variable query,
+			List<Probability> dependencies) {
 		Set<Variable> set_variable = new HashSet<>(get_factors_variable);
 		for(Variable variable : get_factors_variable) 
 			set_variable.addAll(this.get_child(variable));
 		List<Factor> factors = new ArrayList<>();
-		for(Variable variable : set_variable) {
-			factors.add(new Factor(
-					this.get_side_variable(variable)
-					.stream().filter(get_factors_variable::contains).collect(Collectors.toList()),
-					variable.getC_p()
-					));
-		}
+		System.out.println(get_factors_variable.stream().map(item->item.getName()).collect(Collectors.toList()));
+		for(Variable variable : set_variable) 
+			factors.add(create_factor(variable, get_factors_variable, dependencies));
 		get_factors_variable.remove(query);
 		return new Factors(factors, get_factors_variable, query);
+	}
+
+	private Factor create_factor(Variable variable, 
+			List<Variable> get_factors_variable, 
+			List<Probability> dependencies) {
+		List<Cond_prob> c_p = new ArrayList<>();
+		List<Variable> factor_variables = this.get_side_variable(variable)
+				.stream().filter(get_factors_variable::contains).collect(Collectors.toList());
+		boolean flag = true;
+		for (Cond_prob cp : variable.getC_p()) {
+			for(Condition condition : cp.getProbability().keySet()) {
+				for (Probability probability : condition.get_all()) {
+					List<Probability> list_prob = dependencies.stream().filter(item->probability.getVariable_name()
+							== item.getVariable_name()).collect(Collectors.toList());
+					if(list_prob != null) {
+						for(Probability prob2 : list_prob) {
+							if (!prob2.getVariable_value().equals(probability.getVariable_value()))
+								flag = false; // TODO: Check here why is't not work.
+						}
+					}
+				}
+			}
+			if (flag)
+				c_p.add(cp);
+			flag = true;
+		}
+		return new Factor(factor_variables, c_p);
 	}
 
 	private List<Variable> get_side_variable(Variable variable) {

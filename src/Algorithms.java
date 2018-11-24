@@ -213,7 +213,7 @@ public class Algorithms {
 	 */
 	protected static String algorithm_2(Network network, Query query) {
 		Factors factors = network.create_factors(get_factors_variable(network, query), 
-				network.get_searched_query(query));
+				network.get_searched_query(query), query.getCondition().getVariable_dependencies());
 		factors.run();
 		return null;
 	}
@@ -225,8 +225,32 @@ public class Algorithms {
 		return factors;
 	}
 
+	static boolean are_equal(Condition cond, List<Probability> line) {
+		for(Probability probability : cond.get_all()) 
+			if(!contain(line, probability)) 
+				return false;
+		return true;
+	}
+	
+	public static boolean are_contained(Condition cond, List<Probability> prob1) {
+		for(Probability probability : prob1) 
+			if (!contain(cond.get_all(), probability))
+				return false;
+		return true;
+	}
+	
+	private static boolean contain(List<Probability> line, Probability probability) {
+		for (Probability line_prob : line) 
+			if (line_prob.getVariable_value().equals(probability.getVariable_value())
+					&& line_prob.getVariable_name() == probability.getVariable_name())
+				return true;
+		return false;
+	}
+	
 	protected static String algorithm_3(Network network, Query query) {
 		return null;
 	}
+
+	
 
 }

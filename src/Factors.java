@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class Factors {
@@ -15,10 +16,13 @@ public class Factors {
 	}
 
 	public void run() {
+		System.out.println(this.getFactors().toString());
 		for(Variable variable : variable_factors) {
+			//System.out.println(match(variable));
+			
 			Factor factor = unionAll(match(variable), variable);  // join.
-			System.out.println(factor);
-			factor = eliminate(variable); // TODO: implement this. error null pointer from here.
+			//System.out.println(factor.toString());
+			factor = eliminate(factor, variable); 
 			factors.removeAll(match(variable));
 			factors.add(factor);
 			System.out.println("#################");
@@ -36,14 +40,33 @@ public class Factors {
 	private Factor unionAll(List<Factor> factors, Variable variable) {
 		while(factors.size() > 1) {
 			Collections.sort(factors, new Factor_comparator());
-			factors.set(0, factors.get(0).join( factors.get(1)));
+			//System.out.println(factors.get(0));
+			factors.set(0, factors.get(0).join(factors.get(1)));		
 			factors.remove(1);
 		}
 		return factors.get(0);
 	}
 
-	private Factor eliminate(Variable variable) {
-		return null;
+	private Factor eliminate(Factor factor, Variable variable) {
+		factor.getVariables().remove(variable);
+		List<List<Probability>> new_cp = 
+				Algorithms.cartesian_product(Algorithms.create_list_list(factor.getVariables()));
+		List<Cond_prob> c_p = new ArrayList<>();
+		for (List<Probability> prob1 : new_cp) {
+			double d = 0.0;
+			for (Cond_prob cp : factor.getC_p()) {
+				for(Condition cond : cp.getProbability().keySet()) {
+					if (Algorithms.are_contained(cond, prob1)) {
+						d += cp.getProbability().get(cond);
+					}
+						
+				}
+			}
+			HashMap<Condition, Double> probability = new HashMap<>();
+			probability.put(new Condition(prob1), d);
+			c_p.add(new Cond_prob(probability));
+		}
+		return new Factor(factor.getVariables(), c_p);
 	}
 
 	public List<Factor> getFactors() {
