@@ -36,4 +36,11 @@ public class Cond_prob {
 		return answer;
 	}
 
+	public double get_sum() {
+		double ans = 0.0;
+		for(Condition cond : this.getProbability().keySet()) 
+			ans += this.getProbability().get(cond);
+		return ans;
+	}
+
 }

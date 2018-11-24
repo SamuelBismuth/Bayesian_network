@@ -86,9 +86,31 @@ public class Factor {
 	private double get_match(List<Probability> line) {
 		for(Cond_prob cp : this.getC_p()) 
 			for(Condition cond : cp.getProbability().keySet()) 
-				if (Algorithms.are_equal(cond, line)) 
+				if (Algorithms.if_exist_so_equal(cond, line)) 
 					return cp.getProbability().get(cond);
 		return 0;
+	}
+
+	public void normalize() {
+		double lambda = 0.0;
+		for(Cond_prob cp : this.getC_p()) 
+			lambda += cp.get_sum();
+		for(Cond_prob cp : this.getC_p()) {
+			for(Condition cond : cp.getProbability().keySet()) {
+				cp.getProbability().put(cond, cp.getProbability().get(cond) / lambda);
+			}
+		}
+				
+	}
+
+	public double get_final_double(String variable_value) {
+		for (Cond_prob cp : this.getC_p()) {
+			for (Condition cond : cp.getProbability().keySet())
+				for (Probability prob : cond.get_all())
+					if(prob.getVariable_value().equals(variable_value))
+						return cp.getProbability().get(cond);
+		}
+		return 0.0;
 	}
 }
 

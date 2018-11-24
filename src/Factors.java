@@ -16,16 +16,15 @@ public class Factors {
 	}
 
 	public void run() {
-		System.out.println(this.getFactors().toString());
-		for(Variable variable : variable_factors) {
-			//System.out.println(match(variable));
-			
+		for(Variable variable : variable_factors) {	
+			if (factors.size() == 1) {
+				factors.set(0, eliminate(factors.get(0), variable)); 
+				return;
+			}
 			Factor factor = unionAll(match(variable), variable);  // join.
-			//System.out.println(factor.toString());
 			factor = eliminate(factor, variable); 
 			factors.removeAll(match(variable));
 			factors.add(factor);
-			System.out.println("#################");
 		}
 	}
 
@@ -37,10 +36,9 @@ public class Factors {
 		return factors;
 	}
 
-	private Factor unionAll(List<Factor> factors, Variable variable) {
+	protected Factor unionAll(List<Factor> factors, Variable variable) {
 		while(factors.size() > 1) {
 			Collections.sort(factors, new Factor_comparator());
-			//System.out.println(factors.get(0));
 			factors.set(0, factors.get(0).join(factors.get(1)));		
 			factors.remove(1);
 		}
@@ -59,7 +57,7 @@ public class Factors {
 					if (Algorithms.are_contained(cond, prob1)) {
 						d += cp.getProbability().get(cond);
 					}
-						
+
 				}
 			}
 			HashMap<Condition, Double> probability = new HashMap<>();

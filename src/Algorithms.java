@@ -24,7 +24,7 @@ public class Algorithms {
 
 	// Two static variable counter.
 	static protected int addition_counter 		 = 0,
-					     mulitiplication_counter = 0;
+			mulitiplication_counter = 0;
 	// The format for the round.
 	static DecimalFormat df = new DecimalFormat("#0.00000");
 
@@ -164,7 +164,7 @@ public class Algorithms {
 					variables_not_on_the_query.get(i).getValues()));
 		return list_list_probabilities;
 	}
-	
+
 	/**
 	 * This method do a Cartesian product for two given list.
 	 * This method is implemented from: 
@@ -212,12 +212,18 @@ public class Algorithms {
 	 * @return the result of the query including the counter in the well form.
 	 */
 	protected static String algorithm_2(Network network, Query query) {
+		addition_counter = mulitiplication_counter = 0; 
 		Factors factors = network.create_factors(get_factors_variable(network, query), 
 				network.get_searched_query(query), query.getCondition().getVariable_dependencies());
 		factors.run();
-		return null;
+		Factor factor = factors.unionAll(factors.getFactors(), network.get_searched_query(query));
+		factor.normalize();
+		return df.format(factor.get_final_double(query.getCondition().
+				getVariable_probabilty().getVariable_value())) + "," +
+		Integer.toString(addition_counter) + "," +
+		Integer.toString(mulitiplication_counter);
 	}
-	
+
 	private static List<Variable> get_factors_variable(Network network, Query query) {
 		List<Variable> factors = 
 				network.not_on_the_query(query.get_all_probability());
@@ -231,14 +237,14 @@ public class Algorithms {
 				return false;
 		return true;
 	}
-	
+
 	public static boolean are_contained(Condition cond, List<Probability> prob1) {
 		for(Probability probability : prob1) 
 			if (!contain(cond.get_all(), probability))
 				return false;
 		return true;
 	}
-	
+
 	private static boolean contain(List<Probability> line, Probability probability) {
 		for (Probability line_prob : line) 
 			if (line_prob.getVariable_value().equals(probability.getVariable_value())
@@ -246,11 +252,23 @@ public class Algorithms {
 				return true;
 		return false;
 	}
-	
+
 	protected static String algorithm_3(Network network, Query query) {
 		return null;
 	}
 
-	
+	public static boolean if_exist_so_equal(Condition cond, List<Probability> line) {
+		boolean flag = true;
+		for (Probability probability : cond.get_all()) {
+			List<Probability> list_prob = line.stream().filter(item->probability.getVariable_name()
+					== item.getVariable_name()).collect(Collectors.toList());
+			for(Probability prob2 : list_prob) {
+				if (!prob2.getVariable_value().equals(probability.getVariable_value())) {
+					flag = false;
+				}
+			}
+		}
+		return flag;
+	}
 
 }
