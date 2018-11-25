@@ -34,13 +34,11 @@ public class Algorithms {
 		addition_counter = mulitiplication_counter = 0; 
 		double Y1 = Util.prepare_marginalization(
 				network, 
-				query.get_all_probability(), 
-				addition_counter);
+				query.get_all_probability());
 		double Y2 = Util.calculate_inverse_marginalization(
 				network, 
 				query.getCondition().getVariable_dependencies(),
-				query.getCondition().getVariable_probabilty(), 
-				addition_counter);
+				query.getCondition().getVariable_probabilty());
 		addition_counter++;
 		return df.format((1 / (Y1 + Y2)) * Y1) + "," +
 		Integer.toString(addition_counter) + "," +

@@ -22,15 +22,14 @@ public class Util {
 	protected static double calculate_inverse_marginalization(
 			Network network, 
 			List<Probability> variable_dependencies,
-			Probability variable_probabilty, 
-			int addition_counter) {
+			Probability variable_probabilty) {
 		double answer = 0.0;
 		List<String> values = network.find_variable_by_name(
 				variable_probabilty.getVariable_name()).
 				get_inverse(variable_probabilty.getVariable_value());
-		addition_counter--;
+		Algorithms.addition_counter--;
 		for (String value : values) {
-			addition_counter++;
+			Algorithms.addition_counter++;
 			answer += prepare_marginalization(
 					network, 
 					Stream.concat(
@@ -38,8 +37,7 @@ public class Util {
 							Collections.singletonList(
 									new Probability(variable_probabilty.getVariable_name(),
 											value)).stream()).
-					collect(Collectors.toList()),
-					addition_counter);
+					collect(Collectors.toList()));
 		}
 		return answer;
 	}
@@ -54,12 +52,11 @@ public class Util {
 	private static double calculate_marginalization(
 			Network network, 
 			List<List<Probability>> joint_probability,
-			List<Probability> probabilities, 
-			int addition_counter) {
+			List<Probability> probabilities) {
 		double answer = 0.0;
-		addition_counter--;
+		Algorithms.addition_counter--;
 		for (List<Probability> list_probability : joint_probability) { 
-			addition_counter++;
+			Algorithms.addition_counter++;
 			answer += network.calculate_probability(
 					Stream.concat(list_probability.stream(), probabilities.stream())
 					.collect(Collectors.toList()));
@@ -78,12 +75,11 @@ public class Util {
 	private static double distribution(
 			List<Probability> probabilities, 
 			List<Probability> probabilities2, 
-			Network network,
-			int addition_counter) {
+			Network network) {
 		double answer = 0.0;
-		addition_counter--;
+		Algorithms.addition_counter--;
 		for(Probability probability : probabilities2) {
-			addition_counter++;
+			Algorithms.addition_counter++;
 			answer += network.calculate_probability(Stream.concat(
 					probabilities.stream(), 
 					Collections.singletonList(probability).stream()).
@@ -101,8 +97,7 @@ public class Util {
 	 */
 	protected static double prepare_marginalization(
 			Network network, 
-			List<Probability> probabilities, 
-			int addition_counter) {
+			List<Probability> probabilities) {
 		List<Variable> variables_not_on_the_query = network.not_on_the_query(probabilities);
 		if (variables_not_on_the_query.size() == 0) 
 			return network.calculate_probability(probabilities); 
@@ -111,13 +106,11 @@ public class Util {
 					create_list_probabilities(
 							variables_not_on_the_query.get(0).getName(), 
 							variables_not_on_the_query.get(0).getValues()), 
-					network, 
-					addition_counter);
+					network);
 		return calculate_marginalization(
 				network, 
 				cartesian_product(create_list_list(variables_not_on_the_query)),
-				probabilities, 
-				addition_counter);
+				probabilities);
 	}
 	
 	/**

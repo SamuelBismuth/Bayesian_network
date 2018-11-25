@@ -82,7 +82,9 @@ public class Factor {
 		List<List<Probability>> new_factor = 
 				Util.cartesian_product(Util.create_list_list(variables));
 		List<Cond_prob> cp = new ArrayList<>();
+		Algorithms.mulitiplication_counter--;
 		for (List<Probability> line : new_factor) {
+			Algorithms.mulitiplication_counter++;
 			double one = fac2.get_match(line);
 			double two = this.get_match(line);
 			HashMap<Condition, Double> probability = new HashMap<>();

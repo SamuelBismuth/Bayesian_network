@@ -70,10 +70,13 @@ public class Factors {
 		List<Cond_prob> c_p = new ArrayList<>();
 		for (List<Probability> prob1 : new_cp) {
 			double d = 0.0;
+			Algorithms.addition_counter--;
 			for (Cond_prob cp : factor.getC_p()) 
 				for(Condition cond : cp.getProbability().keySet()) 
-					if (Util.are_contained(cond, prob1)) 
+					if (Util.are_contained(cond, prob1)) {
+						Algorithms.addition_counter++;
 						d += cp.getProbability().get(cond);
+					}
 			HashMap<Condition, Double> probability = new HashMap<>();
 			probability.put(new Condition(prob1), d);
 			c_p.add(new Cond_prob(probability));
