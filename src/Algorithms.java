@@ -55,7 +55,7 @@ public class Algorithms {
 		addition_counter = mulitiplication_counter = 0; 
 		Factors factors = network.create_factors(Util.get_factors_variable(network, query), 
 				network.get_searched_query(query), query.getCondition().getVariable_dependencies());
-		factors.run();
+		factors.run(true);
 		Factor factor = factors.unionAll(factors.getFactors(), network.get_searched_query(query));
 		factor.normalize();
 		return df.format(factor.get_final_double(query.getCondition().
@@ -71,7 +71,16 @@ public class Algorithms {
 	 * @return
 	 */
 	protected static String algorithm_3(Network network, Query query) {
-		return null;
+		addition_counter = mulitiplication_counter = 0; 
+		Factors factors = network.create_factors(Util.get_factors_variable(network, query), 
+				network.get_searched_query(query), query.getCondition().getVariable_dependencies());
+		factors.run(false);
+		Factor factor = factors.unionAll(factors.getFactors(), network.get_searched_query(query));
+		factor.normalize();
+		return df.format(factor.get_final_double(query.getCondition().
+				getVariable_probabilty().getVariable_value())) + "," +
+		Integer.toString(addition_counter) + "," +
+		Integer.toString(mulitiplication_counter);
 	}
 
 	

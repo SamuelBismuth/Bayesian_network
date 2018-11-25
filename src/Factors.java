@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import jdk.internal.dynalink.linker.LinkerServices.Implementation;
+
 /**
  * @author sam
  * This class represents the object factors, which include some {@link Factor}.
@@ -30,8 +32,11 @@ public class Factors {
 	 * This function run a query.
 	 * i.e., this method do: union, and eliminate for all the variables of the factors.
 	 */
-	public void run() {
-		Collections.sort(variable_factors, new Variable_comparator(this));
+	public void run(boolean flag_algo2) {
+		if(flag_algo2)
+			Collections.sort(variable_factors, new Variable_comparator_algorithm2());
+		else
+			Collections.sort(variable_factors, new Variable_comparator_algorithm3(this));
 		for(Variable variable : variable_factors) {	
 			if (factors.size() == 1) {
 				factors.set(0, eliminate(factors.get(0), variable)); 
@@ -123,19 +128,47 @@ public class Factors {
 	}
 }
 
-class Variable_comparator implements Comparator<Variable> {
+/**
+ * @author sam
+ * This class {@link Implementation} Comparator, two compare two Variable.
+ */
+class Variable_comparator_algorithm2 implements Comparator<Variable> {
+
+	/**
+	 * The method compare.
+	 */
+	@Override
+	public int compare(Variable o1, Variable o2) {
+		return o1.getName() > o2.getName() ? 1 : 
+			o1.getName() ==  o2.getName() ? -0 : -1;
+
+	}
+
+}
+
+/**
+ * @author sam
+ * This class {@link Implementation} Comparator, two compare two Variable.
+ */
+class Variable_comparator_algorithm3 implements Comparator<Variable> {
 
 	private Factors factors;
 
-	public Variable_comparator(Factors factors) {
+	/**
+	 * Constructor.
+	 * @param factors
+	 */
+	public Variable_comparator_algorithm3(Factors factors) {
 		this.factors = factors;
 	}
 
+	/**
+	 * The method compare.
+	 */
 	@Override
 	public int compare(Variable o1, Variable o2) {
 		return factors.match(o1).size() > factors.match(o2).size() ? 1 : 
 			 factors.match(o1).size() ==  factors.match(o2).size() ? -0 : -1;
 
 	}
-
 }

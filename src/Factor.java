@@ -113,12 +113,12 @@ public class Factor {
 	 */
 	public void normalize() {
 		double lambda = 0.0;
-		Algorithms.addition_counter++;
+		//Algorithms.addition_counter++;
 		for(Cond_prob cp : this.getC_p()) 
 			lambda += cp.get_sum();
 		for(Cond_prob cp : this.getC_p()) {
 			for(Condition cond : cp.getProbability().keySet()) {
-				Algorithms.mulitiplication_counter++;
+				//Algorithms.mulitiplication_counter++;
 				cp.getProbability().put(cond, cp.getProbability().get(cond) / lambda);
 			}
 		}	
