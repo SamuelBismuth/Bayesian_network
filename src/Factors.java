@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class Factors {
 	 * i.e., this method do: union, and eliminate for all the variables of the factors.
 	 */
 	public void run() {
+		Collections.sort(variable_factors, new Variable_comparator(this));
 		for(Variable variable : variable_factors) {	
 			if (factors.size() == 1) {
 				factors.set(0, eliminate(factors.get(0), variable)); 
@@ -41,7 +43,7 @@ public class Factors {
 			factors.add(factor);
 		}
 	}
-	
+
 	/**
 	 * This method do the union between all the factors.
 	 * @param factors
@@ -68,13 +70,12 @@ public class Factors {
 		List<List<Probability>> new_cp = 
 				Util.cartesian_product(Util.create_list_list(factor.getVariables()));
 		List<Cond_prob> c_p = new ArrayList<>();
+		Algorithms.addition_counter += new_cp.size();
 		for (List<Probability> prob1 : new_cp) {
 			double d = 0.0;
-			Algorithms.addition_counter--;
 			for (Cond_prob cp : factor.getC_p()) 
 				for(Condition cond : cp.getProbability().keySet()) 
 					if (Util.are_contained(cond, prob1)) {
-						Algorithms.addition_counter++;
 						d += cp.getProbability().get(cond);
 					}
 			HashMap<Condition, Double> probability = new HashMap<>();
@@ -89,14 +90,14 @@ public class Factors {
 	 * @param variable
 	 * @return factors.
 	 */
-	private List<Factor> match(Variable variable) {
+	protected List<Factor> match(Variable variable) {
 		List<Factor> factors = new ArrayList<>();
 		for (Factor factor : this.getFactors())
 			if(factor.contains(variable))
 				factors.add(factor);
 		return factors;
 	}
-	
+
 	/**
 	 * Get factors.
 	 * @return factors.
@@ -120,4 +121,21 @@ public class Factors {
 	protected Variable getQuery() {
 		return query;
 	}
+}
+
+class Variable_comparator implements Comparator<Variable> {
+
+	private Factors factors;
+
+	public Variable_comparator(Factors factors) {
+		this.factors = factors;
+	}
+
+	@Override
+	public int compare(Variable o1, Variable o2) {
+		return factors.match(o1).size() > factors.match(o2).size() ? 1 : 
+			 factors.match(o1).size() ==  factors.match(o2).size() ? -0 : -1;
+
+	}
+
 }

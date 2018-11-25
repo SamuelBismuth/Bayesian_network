@@ -82,12 +82,11 @@ public class Factor {
 		List<List<Probability>> new_factor = 
 				Util.cartesian_product(Util.create_list_list(variables));
 		List<Cond_prob> cp = new ArrayList<>();
-		Algorithms.mulitiplication_counter--;
 		for (List<Probability> line : new_factor) {
-			Algorithms.mulitiplication_counter++;
 			double one = fac2.get_match(line);
 			double two = this.get_match(line);
 			HashMap<Condition, Double> probability = new HashMap<>();
+			Algorithms.mulitiplication_counter++;
 			probability.put(new Condition(line), one * two);
 			cp.add(new Cond_prob(probability));
 		}
@@ -108,18 +107,21 @@ public class Factor {
 	}
 
 	/**
+	 * TODO: Check if the division is counted as a multiplication?!!
+	 * TODO: Maybe it's only one multiplication (only the one which interested us).
 	 * This method normalize the factor.
 	 */
 	public void normalize() {
 		double lambda = 0.0;
+		Algorithms.addition_counter++;
 		for(Cond_prob cp : this.getC_p()) 
 			lambda += cp.get_sum();
 		for(Cond_prob cp : this.getC_p()) {
 			for(Condition cond : cp.getProbability().keySet()) {
+				Algorithms.mulitiplication_counter++;
 				cp.getProbability().put(cond, cp.getProbability().get(cond) / lambda);
 			}
-		}
-				
+		}	
 	}
 
 	/**
@@ -178,8 +180,7 @@ class Factor_comparator implements Comparator<Factor> {
 	 */
 	@Override
 	public int compare(Factor o1, Factor o2) {
-		return o1.getC_p().size() < o2.getC_p().size() ? 1 : 
+		return o1.getC_p().size() > o2.getC_p().size() ? 1 : 
 			o1.getC_p().size() == o2.getC_p().size() ? -0 : -1;
 	}
-
 }
