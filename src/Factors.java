@@ -3,18 +3,32 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author sam
+ * This class represents the object factors, which include some {@link Factor}.
+ */
 public class Factors {
 
-	private List<Factor> factors;
-	private List<Variable> variable_factors;
-	private Variable query;
+	private List<Factor> factors;  // The factors.
+	private List<Variable> variable_factors;  // All the variables of the factors.
+	private Variable query;  // The query we need to answer.
 
+	/**
+	 * Constructor.
+	 * @param factors
+	 * @param variable_factors
+	 * @param query
+	 */
 	public Factors(List<Factor> factors, List<Variable> variable_factors, Variable query) {
 		this.factors = factors;
 		this.variable_factors = variable_factors;
 		this.query = query;
 	}
 
+	/**
+	 * This function run a query.
+	 * i.e., this method do: union, and eliminate for all the variables of the factors.
+	 */
 	public void run() {
 		for(Variable variable : variable_factors) {	
 			if (factors.size() == 1) {
@@ -27,15 +41,13 @@ public class Factors {
 			factors.add(factor);
 		}
 	}
-
-	private List<Factor> match(Variable variable) {
-		List<Factor> factors = new ArrayList<>();
-		for (Factor factor : this.getFactors())
-			if(factor.contains(variable))
-				factors.add(factor);
-		return factors;
-	}
-
+	
+	/**
+	 * This method do the union between all the factors.
+	 * @param factors
+	 * @param variable
+	 * @return
+	 */
 	protected Factor unionAll(List<Factor> factors, Variable variable) {
 		while(factors.size() > 1) {
 			Collections.sort(factors, new Factor_comparator());
@@ -45,21 +57,23 @@ public class Factors {
 		return factors.get(0);
 	}
 
+	/**
+	 * This function eliminate the variable from the factor.
+	 * @param factor
+	 * @param variable
+	 * @return the new factor.
+	 */
 	private Factor eliminate(Factor factor, Variable variable) {
 		factor.getVariables().remove(variable);
 		List<List<Probability>> new_cp = 
-				Algorithms.cartesian_product(Algorithms.create_list_list(factor.getVariables()));
+				Util.cartesian_product(Util.create_list_list(factor.getVariables()));
 		List<Cond_prob> c_p = new ArrayList<>();
 		for (List<Probability> prob1 : new_cp) {
 			double d = 0.0;
-			for (Cond_prob cp : factor.getC_p()) {
-				for(Condition cond : cp.getProbability().keySet()) {
-					if (Algorithms.are_contained(cond, prob1)) {
+			for (Cond_prob cp : factor.getC_p()) 
+				for(Condition cond : cp.getProbability().keySet()) 
+					if (Util.are_contained(cond, prob1)) 
 						d += cp.getProbability().get(cond);
-					}
-
-				}
-			}
 			HashMap<Condition, Double> probability = new HashMap<>();
 			probability.put(new Condition(prob1), d);
 			c_p.add(new Cond_prob(probability));
@@ -67,16 +81,40 @@ public class Factors {
 		return new Factor(factor.getVariables(), c_p);
 	}
 
-	public List<Factor> getFactors() {
+	/**
+	 * This method for a given variable return all the factor to deal with.
+	 * @param variable
+	 * @return factors.
+	 */
+	private List<Factor> match(Variable variable) {
+		List<Factor> factors = new ArrayList<>();
+		for (Factor factor : this.getFactors())
+			if(factor.contains(variable))
+				factors.add(factor);
+		return factors;
+	}
+	
+	/**
+	 * Get factors.
+	 * @return factors.
+	 */
+	protected List<Factor> getFactors() {
 		return factors;
 	}
 
-	public List<Variable> getVariable_factors() {
+	/**
+	 * Get variable factors.
+	 * @return variable_factors.
+	 */
+	protected List<Variable> getVariable_factors() {
 		return variable_factors;
 	}
 
-	public Variable getQuery() {
+	/**
+	 * Get query.
+	 * @return the variable of the query.
+	 */
+	protected Variable getQuery() {
 		return query;
 	}
-
 }

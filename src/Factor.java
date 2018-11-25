@@ -5,51 +5,50 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jdk.internal.dynalink.linker.LinkerServices.Implementation;
+
 /**
  * @author sam
  * This class represents the Object Factors.
  */
 public class Factor {
 
-	// Here we need to check all the matches.
-	private List<Variable> variables;
-	private List<Cond_prob> c_p;
-
+	private List<Variable> variables;  // The variables of the factor.
+	private List<Cond_prob> c_p;  // The table of the factor.
+ 
+	/**
+	 * Constructor.
+	 * @param variables
+	 * @param c_p
+	 */
 	public Factor(List<Variable> variables, List<Cond_prob> c_p) {
 		this.variables = variables;
 		this.c_p = c_p;
 	}
-
-	public List<Variable> getVariables() {
-		return variables;
-	}
-
-	public List<Cond_prob> getC_p() {
-		return c_p;
-	}
-
+	
+	/**
+	 * Get the variable in common between this factor and the argument factor.
+	 * @param factor
+	 * @return List<Variable>.
+	 */
 	protected List<Variable> variable_union(Factor factor) {
-		return Stream.concat(
-				factor.getVariables().stream(), 
-				this.getVariables().stream()).
-				collect(Collectors.toList());
+		return Util_list.concatenate_two_list(factor.getVariables(), this.getVariables());
 	}
 
-	@Override
-	public String toString() {
-		String answer = "";
-		for (Variable variable : this.getVariables()) 
-			answer += variable.getName();
-		answer += "\n";
-		for (Cond_prob cp : this.getC_p())
-			answer += cp.toString();
-		return answer;
-	}
-
+	/**
+	 * Check if the variable is include in variables.
+	 * @param variable
+	 * @return true if the variable is include else false.
+	 */
 	protected boolean contains(Variable variable) {
 		return this.getVariables().contains(variable);
 	}
 
+	/**
+	 * This method return the factor with the biggest number of variable.
+	 * @param factor
+	 * @return either factor or this.
+	 */
 	protected Factor maximum_variable(Factor factor) {
 		if(factor.getVariables().size() == this.getVariables().size())
 			return this;
@@ -58,6 +57,11 @@ public class Factor {
 		return this;
 	}
 
+	/**
+	 * This method return the factor with the lowest number of variable.
+	 * @param factor
+	 * @return either factor or this.
+	 */
 	protected Factor minimum_variable(Factor factor) {
 		if(factor.getVariables().size() == this.getVariables().size())
 			return factor;
@@ -66,12 +70,17 @@ public class Factor {
 		return this;
 	}
 
+	/**
+	 * This function join two factor.
+	 * @param fac2
+	 * @return the new factor.
+	 */
 	public Factor join(Factor fac2) {
 		List<Variable> variables = Stream.concat(this.getVariables().stream(), 
 				fac2.getVariables().stream()).distinct().collect(Collectors.toList());
 		// Cartesian product.
 		List<List<Probability>> new_factor = 
-				Algorithms.cartesian_product(Algorithms.create_list_list(variables));
+				Util.cartesian_product(Util.create_list_list(variables));
 		List<Cond_prob> cp = new ArrayList<>();
 		for (List<Probability> line : new_factor) {
 			double one = fac2.get_match(line);
@@ -83,14 +92,22 @@ public class Factor {
 		return new Factor(variables, cp);
 	}
 
+	/**
+	 * This function return the probability from the match between the line and the cp.
+	 * @param line
+	 * @return the probability.
+	 */
 	private double get_match(List<Probability> line) {
 		for(Cond_prob cp : this.getC_p()) 
 			for(Condition cond : cp.getProbability().keySet()) 
-				if (Algorithms.if_exist_so_equal(cond, line)) 
+				if (Util.if_exist_so_equal(cond, line)) 
 					return cp.getProbability().get(cond);
 		return 0;
 	}
 
+	/**
+	 * This method normalize the factor.
+	 */
 	public void normalize() {
 		double lambda = 0.0;
 		for(Cond_prob cp : this.getC_p()) 
@@ -103,19 +120,60 @@ public class Factor {
 				
 	}
 
+	/**
+	 * This method gives the final double for the final answer of the query.
+	 * @param variable_value
+	 * @return the probability.
+	 */
 	public double get_final_double(String variable_value) {
 		for (Cond_prob cp : this.getC_p()) {
 			for (Condition cond : cp.getProbability().keySet())
-				for (Probability prob : cond.get_all())
+				for (Probability prob : cond.getJoin_probability())
 					if(prob.getVariable_value().equals(variable_value))
 						return cp.getProbability().get(cond);
 		}
 		return 0.0;
 	}
+	
+	/**
+	 * Get the variables.
+	 * @return variables.
+	 */
+	public List<Variable> getVariables() {
+		return variables;
+	}
+
+	/**
+	 * Get the Cond_Prob.
+	 * @return c_p.
+	 */
+	public List<Cond_prob> getC_p() {
+		return c_p;
+	}
+
+	
+	@Override
+	public String toString() {
+		String answer = "";
+		for (Variable variable : this.getVariables()) 
+			answer += variable.getName();
+		answer += "\n";
+		for (Cond_prob cp : this.getC_p())
+			answer += cp.toString();
+		return answer;
+	}
 }
 
+/**
+ * @author sam
+ * This class {@link Implementation} Comparator, two compare two factors.
+ */
 class Factor_comparator implements Comparator<Factor> {
 
+	/**
+	 * This function compare two factor as the next way:
+	 * the size of the {@link Cond_prob} of the two factors.
+	 */
 	@Override
 	public int compare(Factor o1, Factor o2) {
 		return o1.getC_p().size() < o2.getC_p().size() ? 1 : 

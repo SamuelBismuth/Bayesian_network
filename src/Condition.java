@@ -1,8 +1,6 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author sam
@@ -13,7 +11,8 @@ public class Condition {
 
 	private Probability variable_probabilty; // variable probability.
 	private List<Probability> variable_dependencies; // HashMap: parent value -> parent variable name.
-	private List<Probability> join_probability;
+	private List<Probability> join_probability; // All the join probabilities.
+
 	/**
 	 * Constructor.
 	 * @param variable_probabilty
@@ -22,13 +21,19 @@ public class Condition {
 	public Condition(Probability variable_probabilty, List<Probability> variable_dependencies) {
 		this.variable_probabilty = variable_probabilty;
 		this.variable_dependencies = variable_dependencies;
-	}
-	
-	public Condition(List<Probability> join_probability) {
-		 this.join_probability = join_probability;
+		this.join_probability = Util_list.concatenate_item_with_list(variable_dependencies, variable_probabilty);
 	}
 
 	/**
+	 * Constructor.
+	 * @param join_probability
+	 */
+	public Condition(List<Probability> join_probability) {
+		this.join_probability = join_probability;
+	}
+
+	/**
+	 * This method return true if the value if the same value of the main probability.
 	 * @param value
 	 * @return true if the value is the same value of the condition.
 	 */
@@ -36,26 +41,6 @@ public class Condition {
 		if (this.getVariable_probabilty().getVariable_value().equals(value))
 			return true;
 		return false;
-	}
-
-	/**
-	 * Get variable probability.
-	 * @return the variable probability.
-	 */
-	public Probability getVariable_probabilty() {
-		return variable_probabilty;
-	}
-
-	/**
-	 * Get the variables dependencies.
-	 * @return variable dependencies.
-	 */
-	protected List<Probability> getVariable_dependencies() {
-		return variable_dependencies;
-	}
-
-	public List<Probability> getJoin_probability() {
-		return join_probability;
 	}
 
 	/**
@@ -90,14 +75,73 @@ public class Condition {
 			if(step == false)
 				return false;
 			step = false;
-			for (Probability prob2 : condition.getVariable_dependencies()) {
+			for (Probability prob2 : condition.getVariable_dependencies()) 
 				if (prob1.is_equal(prob2))
 					step = true;
-			}
 		}
 		return step;
 	}
 
+	/**
+	 * This function gives the list off all the variables of the Condition.
+	 * @return
+	 */
+	protected List<Character> get_variable() {
+		List<Character> variables = new ArrayList<>();
+		for (Probability probability : this.getJoin_probability())
+			variables.add(probability.getVariable_name());
+		return variables;
+	}
+
+	/**
+	 * This function return all the matched variable between the two Condition.
+	 * @param cond2
+	 * @return List<Character>.
+	 */
+	public List<Character> match_variable(Condition cond2) {
+		return Util_list.get_match_from_two_list(this.get_variable(), cond2.get_variable());
+	}
+
+	/**
+	 * Given another condition and a variable, this function check if the value for the given variable
+	 * are the same on this Condition object and the condition.
+	 * @param condition2
+	 * @param variable
+	 * @return true if the value for the variable are common, else false.
+	 */
+	public boolean in_common(Condition condition, Variable variable) {
+		if(this.get_variable().stream().map(item->item.charValue()).
+				collect(Collectors.toList()).contains(variable.getName()) &&
+				condition.get_variable().stream().map(item->item.charValue()).
+				collect(Collectors.toList()).contains(variable.getName()))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Get variable probability.
+	 * @return the variable probability.
+	 */
+	public Probability getVariable_probabilty() {
+		return variable_probabilty;
+	}
+
+	/**
+	 * Get the variables dependencies.
+	 * @return variable dependencies.
+	 */
+	protected List<Probability> getVariable_dependencies() {
+		return variable_dependencies;
+	}
+
+	/**
+	 * Get the join proabilities.
+	 * @return
+	 */
+	protected List<Probability> getJoin_probability() {
+		return join_probability;
+	}
+	
 	@Override
 	public String toString() {
 		if (variable_probabilty == null)
@@ -108,57 +152,5 @@ public class Condition {
 		for(Probability probability: variable_dependencies) 
 			answer += probability.toString();
 		return answer;
-	}
-
-	protected List<Character> get_variable() {
-		if(this.getVariable_probabilty() == null) {
-			return this.getJoin_probability().stream().map(item -> item.getVariable_name())
-					.collect(Collectors.toList());
-		}
-		if (this.getVariable_dependencies() == null) {
-			List<Character> ans = new ArrayList<>();
-			ans.add(this.getVariable_probabilty().getVariable_name());
-			return ans;
-		}
-		List<Character> variables = new ArrayList<>();
-		variables.add(this.getVariable_probabilty().getVariable_name());
-		for (Probability probability : this.getVariable_dependencies())
-			variables.add(probability.getVariable_name());
-		return variables;
-	}
-	
-	public List<Character> match_variable(Condition cond2) {
-		return this.get_variable().stream().
-				filter(cond2.get_variable()::contains).
-				collect(Collectors.toList());
-	}
-	
-	protected List<Probability> get_all() {
-		if (this.getVariable_probabilty() == null)
-			return this.getJoin_probability();
-		if(this.getVariable_dependencies() == null)
-			return Collections.singletonList(
-					this.getVariable_probabilty()).stream().
-			collect(Collectors.toList());
-		return Stream.concat(
-				this.getVariable_dependencies().stream(),
-				Collections.singletonList(
-						this.getVariable_probabilty()).stream()).
-				collect(Collectors.toList());
-	}
-
-	/**
-	 * TODO: Implement this.
-	 * @param condition2
-	 * @param variable
-	 * @return
-	 */
-	public boolean in_common(Condition condition2, Variable variable) {
-		if(this.get_variable().stream().map(item->item.charValue()).
-				collect(Collectors.toList()).contains(variable.getName()) &&
-				condition2.get_variable().stream().map(item->item.charValue()).
-				collect(Collectors.toList()).contains(variable.getName()))
-			return true;
-		return false;
 	}
 }

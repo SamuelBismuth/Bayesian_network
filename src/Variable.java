@@ -165,7 +165,4 @@ public class Variable {
 		answer += c_p.toString();
 		return answer;
 	}
-
-	
-
 }

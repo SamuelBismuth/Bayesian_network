@@ -18,15 +18,12 @@ public class Query {
 		this.condition = condition;
 		this.algorithm = algorithm;
 	}
-
-	/**
-	 * Get the Condition.
-	 * @return the condition.
-	 */
-	public Condition getCondition() {
-		return condition;
-	}
 	
+	/**
+	 * This method return the main variable of the query.
+	 * @param network
+	 * @return Variable.
+	 */
 	protected Variable get_main_variable(Network network) {
 		return network.find_variable_by_name(
 				this.getCondition().
@@ -34,19 +31,35 @@ public class Query {
 				getVariable_name());
 	}
 	
+	/**
+	 * Get all the variables of the query.
+	 * @return List<Variable>.
+	 */
 	protected List<Variable> get_all_variable(Network network) {
 		return network.find_variables_by_names(this.getCondition().get_variable());
 	}
 	
+	/**
+	 * Get all the probabilitoes of the query.
+	 * @return List<Probability>.
+	 */
 	protected List<Probability> get_all_probability() {
-		return this.getCondition().get_all();
+		return this.getCondition().getJoin_probability();
+	}
+
+	/**
+	 * Get the Condition.
+	 * @return the condition.
+	 */
+	protected Condition getCondition() {
+		return condition;
 	}
 	
 	/**
 	 * Get the algorithm.
 	 * @return the algorithm.
 	 */
-	public char getAlgorithm() {
+	protected char getAlgorithm() {
 		return algorithm;
 	}
 

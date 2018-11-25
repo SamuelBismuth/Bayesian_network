@@ -252,5 +252,4 @@ public class From_txt_to_object {
 		          .mapToObj(i -> array[i]);
 		return myStreamOfCharacters.collect(Collectors.toList()).iterator();
 	}
-	
 }

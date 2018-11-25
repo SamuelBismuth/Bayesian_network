@@ -10,6 +10,17 @@ public class Cond_prob {
 	private HashMap<Condition, Double> probability;  // HashMap:  condition -> probability.
 
 	/**
+	 * Get the sum of all the probabilities.
+	 * @return the sum of all the probabilities.
+	 */
+	public double get_sum() {
+		double ans = 0.0;
+		for(Condition cond : this.getProbability().keySet()) 
+			ans += this.getProbability().get(cond);
+		return ans;
+	}
+	
+	/**
 	 * Constructor.
 	 * @param probability
 	 */
@@ -35,12 +46,4 @@ public class Cond_prob {
 		}
 		return answer;
 	}
-
-	public double get_sum() {
-		double ans = 0.0;
-		for(Condition cond : this.getProbability().keySet()) 
-			ans += this.getProbability().get(cond);
-		return ans;
-	}
-
 }
