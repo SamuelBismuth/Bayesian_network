@@ -64,6 +64,12 @@ public class Algorithms {
 		Integer.toString(mulitiplication_counter);
 	}
 
+	/**
+	 * TODO: What is the difference between 2 and 3???
+	 * @param network
+	 * @param query
+	 * @return
+	 */
 	protected static String algorithm_3(Network network, Query query) {
 		return null;
 	}
