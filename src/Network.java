@@ -80,7 +80,7 @@ public class Network {
 
 	/**
 	 * This method return all the dependencies variable given a list of variables.
-	 * TODO: BFS???!!!
+	 * TODO: BFS!!!
 	 * @param variables
 	 * @return
 	 */
@@ -161,6 +161,25 @@ public class Network {
 		}
 		return new Factor(factor_variables, c_p);
 	}
+	
+	/**
+	 * This method delete all the non used variables.
+	 * @param get_all_variable
+	 */
+	public void delete_not_relevent(List<Variable> get_all_variable) {
+		Set<Variable> relevent_variable = new HashSet<>(get_all_variable);
+		for(Variable variable : get_all_variable) 
+			relevent_variable.addAll(this.get_child(variable));
+		this.setVariables(new ArrayList<>(relevent_variable));
+	}
+
+	/**
+	 * Set the new variables.
+	 * @param variables
+	 */
+	public void setVariables(List<Variable> variables) {
+		this.variables = variables;
+	}
 
 	/**
 	 * This function find the side variables in the factor for a given variable.
@@ -199,6 +218,4 @@ public class Network {
 			answer += query.toString();
 		return answer;
 	}
-
-
 }

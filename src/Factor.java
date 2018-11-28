@@ -107,18 +107,15 @@ public class Factor {
 	}
 
 	/**
-	 * TODO: Check if the division is counted as a multiplication?!!
-	 * TODO: Maybe it's only one multiplication (only the one which interested us).
 	 * This method normalize the factor.
 	 */
 	public void normalize() {
+		Algorithms.addition_counter += this.getC_p().size() - 1;
 		double lambda = 0.0;
-		//Algorithms.addition_counter++;
 		for(Cond_prob cp : this.getC_p()) 
 			lambda += cp.get_sum();
 		for(Cond_prob cp : this.getC_p()) {
 			for(Condition cond : cp.getProbability().keySet()) {
-				//Algorithms.mulitiplication_counter++;
 				cp.getProbability().put(cond, cp.getProbability().get(cond) / lambda);
 			}
 		}	

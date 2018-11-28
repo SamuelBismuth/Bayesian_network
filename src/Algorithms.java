@@ -46,6 +46,7 @@ public class Algorithms {
 	}
 
 	/**
+	 * TODO: Implements the delete_not_relevent function.
 	 * This function implements the algorithm Variable elimination.
 	 * @param network
 	 * @param query
@@ -53,6 +54,7 @@ public class Algorithms {
 	 */
 	protected static String algorithm_2(Network network, Query query) {
 		addition_counter = mulitiplication_counter = 0; 
+		//network.delete_not_relevent(query.get_all_variable(network));
 		Factors factors = network.create_factors(Util.get_factors_variable(network, query), 
 				network.get_searched_query(query), query.getCondition().getVariable_dependencies());
 		factors.run(true);
@@ -65,7 +67,7 @@ public class Algorithms {
 	}
 
 	/**
-	 * TODO: What is the difference between 2 and 3???
+	 * TODO: Implements a new way to sort the factors and explained the logic.
 	 * @param network
 	 * @param query
 	 * @return
@@ -83,5 +85,4 @@ public class Algorithms {
 		Integer.toString(mulitiplication_counter);
 	}
 
-	
 }
