@@ -3,13 +3,13 @@
  * This class handle error of txt.
  */
 @SuppressWarnings("serial")
-public class Wrong_txt extends Exception {
+public class WrongTxt extends Exception {
 
 	/**
 	 * Constructor.
 	 * @param message
 	 */
-	public Wrong_txt(String message) {
+	public WrongTxt(String message) {
 	    super(message);
 	}
 

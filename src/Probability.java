@@ -1,53 +1,48 @@
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * @author sam
- * This class represents the object Probability.
+ * This class represents the object {@link Probability}.
  */
 public class Probability {
 
-	private char variable_name;
-	private String variable_value;
-
+	private Events events;  // All the events for the probability.
+	private double probability;  // The probability (number).
+	
 	/**
-	 * Constructor.
-	 * @param variable_name
-	 * @param variable_value
-	 */
-	public Probability(char variable_name, String variable_value) {
-		this.variable_name = variable_name;
-		this.variable_value = variable_value;
-	}
-
-	/**
-	 * This method check if two probability are equal.
+	 * Constructor for {@link Probability}.
+	 * @param events
 	 * @param probability
-	 * @return true if equals else false.
 	 */
-	protected boolean is_equal(Probability probability) {
-		if (this.getVariable_name() == probability.getVariable_name() && 
-				this.getVariable_value().equals(probability.getVariable_value()))
-			return true;
-		return false;
+	public Probability(Events events, double probability) {
+		this.events = events;
+		this.probability = probability;
+	}
+
+	protected Set<Event> getOtherEvents(String variableName) {
+		if (this.getEvents().getEvents().size() == 1)
+			return null;
+		return events.
+				getEvents().
+				stream().
+				filter(item -> item.getVariable().
+						equals(variableName)).
+						collect(Collectors.toSet());
+	}
+	
+	/**
+	 * @return the events
+	 */
+	public Events getEvents() {
+		return events;
 	}
 
 	/**
-	 * Get variable name.
-	 * @return variable name.
+	 * @return the probability
 	 */
-	public char getVariable_name() {
-		return variable_name;
+	public double getProbability() {
+		return probability;
 	}
-
-	/**
-	 * Get variable value.
-	 * @return the variable value.
-	 */
-	public String getVariable_value() {
-		return variable_value;
-	}
-
-	@Override
-	public String toString() {
-		return variable_name + "=" + variable_value;
-	}
-
+	
 }

@@ -1,72 +1,45 @@
-import java.util.List;
-
 /**
  * @author sam
- * This class represents the object Query.
+ * This class represents the object {@link Query}.
  */
 public class Query {
-	
-	private Condition condition;
-	private char algorithm;
+
+	private Event query;  // The event of the query.
+	private Evidences evidences;  // The evidences of the query.
+	private char algorithm;  // The used algorithm to answer the query.
 	
 	/**
-	 * Constructor.
-	 * @param condition
+	 * Constructor for the {@link Query}, all the fields are required.
+	 * @param query
+	 * @param evidences
 	 * @param algorithm
 	 */
-	public Query(Condition condition, char algorithm) {
-		this.condition = condition;
+	public Query(Event query, Evidences evidences, char algorithm) {
+		super();
+		this.query = query;
+		this.evidences = evidences;
 		this.algorithm = algorithm;
 	}
-	
+
 	/**
-	 * This method return the main variable of the query.
-	 * @param network
-	 * @return Variable.
+	 * @return the query
 	 */
-	protected Variable get_main_variable(Network network) {
-		return network.find_variable_by_name(
-				this.getCondition().
-				getVariable_probabilty().
-				getVariable_name());
-	}
-	
-	/**
-	 * Get all the variables of the query.
-	 * @return List<Variable>.
-	 */
-	protected List<Variable> get_all_variable(Network network) {
-		return network.find_variables_by_names(this.getCondition().get_variable());
-	}
-	
-	/**
-	 * Get all the probabilitoes of the query.
-	 * @return List<Probability>.
-	 */
-	protected List<Probability> get_all_probability() {
-		return this.getCondition().getJoin_probability();
+	public Event getQuery() {
+		return query;
 	}
 
 	/**
-	 * Get the Condition.
-	 * @return the condition.
+	 * @return the evidences
 	 */
-	protected Condition getCondition() {
-		return condition;
+	public Evidences getEvidences() {
+		return evidences;
 	}
-	
+
 	/**
-	 * Get the algorithm.
-	 * @return the algorithm.
+	 * @return the algorithm
 	 */
-	protected char getAlgorithm() {
+	public char getAlgorithm() {
 		return algorithm;
 	}
-
-	@Override
-	public String toString() {
-		return "Query: " + 
-				condition.toString() + ", algorithm=" + algorithm + "\n";
-	}
-
+	
 }

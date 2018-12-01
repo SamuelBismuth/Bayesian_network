@@ -1,4 +1,8 @@
+package temp;
+
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author sam
@@ -19,7 +23,14 @@ public class Cond_prob {
 			ans += this.getProbability().get(cond);
 		return ans;
 	}
-	
+
+	public void deleteEvidence(List<Probability> evidence) {
+		for (Condition condition : this.getProbability().keySet()) 
+			for (Probability probability : condition.getJoin_probability())
+				if (probability.is_include(evidence))
+					this.getProbability().remove(condition);
+	}
+
 	/**
 	 * Constructor.
 	 * @param probability

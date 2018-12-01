@@ -1,3 +1,5 @@
+package temp;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -8,12 +10,19 @@ import java.util.List;
  * The three main methods are the three implemented algorithms.
  * Each algorithm answer to a query of the format: P(A|B,C).
  * To answer to all the query we have a Bayesian Network already build.
+ * Here is the format for the answer:
+ * 
+ * 1: The result rounded five numbers after the point.
+ *  ,
+ * 2: The number of addition.
+ * ,
+ * 3: The number of multiplication.
  */
 public class Algorithms {
 
 	// Two static variable counter.
 	static protected int addition_counter 		 = 0,
-			mulitiplication_counter = 0;
+						 mulitiplication_counter = 0;
 	// The format for the round.
 	static DecimalFormat df = new DecimalFormat("#0.00000");
 
@@ -56,8 +65,8 @@ public class Algorithms {
 		network.getVariables().addAll(deleted_variable);
 		return df.format(factor.get_final_double(query.getCondition().
 				getVariable_probabilty().getVariable_value())) + "," +
-				Integer.toString(addition_counter) + "," +
-				Integer.toString(mulitiplication_counter);
+		Integer.toString(addition_counter) + "," +
+		Integer.toString(mulitiplication_counter);
 	}
 
 	/**
@@ -67,7 +76,17 @@ public class Algorithms {
 	 * @return
 	 */
 	protected static String algorithm_3(Network network, Query query) {
-		return null;
+		addition_counter = mulitiplication_counter = 0; 
+		network.delete_irrelevant(query.get_all_variable(network));
+		Factors factors = network.create_factors(network.getVariables(), 
+				query.getCondition().getVariable_dependencies());
+		factors.run(false);
+		Factor factor = factors.unionAll(factors.getFactors(), network.get_searched_query(query));
+		factor.normalize();
+		return df.format(factor.get_final_double(query.getCondition().
+				getVariable_probabilty().getVariable_value())) + "," +
+		Integer.toString(addition_counter) + "," +
+		Integer.toString(mulitiplication_counter);
 	}
 
 }
