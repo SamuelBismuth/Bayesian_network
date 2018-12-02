@@ -23,4 +23,11 @@ public class Events {
 		return events;
 	}
 	
+	public String toString() {
+		String answer = "";
+		for(Event event : this.getEvents())
+			answer += event.toString() + ",";
+		return answer;
+	}
+	
 }

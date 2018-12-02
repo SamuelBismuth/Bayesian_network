@@ -45,4 +45,8 @@ public class Probability {
 		return probability;
 	}
 	
+	public String toString() {
+		return this.getEvents().toString() + "=" + this.getProbability();
+	}
+	
 }

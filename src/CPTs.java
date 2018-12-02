@@ -19,9 +19,11 @@ public class CPTs {
 		return cpts;
 	}
 
-	public void updateAll(Values values, String variableName) {
-		for(CPT cpt : cpts)
-			cpt.update(values, variableName);
+	public String toString() {
+		String answer = "";
+		for (CPT cpt : this.getCpts())
+			answer += cpt.toString();
+		return answer;
 	}
 	
 }

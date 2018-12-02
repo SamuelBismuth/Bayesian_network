@@ -31,4 +31,8 @@ public class Network {
 		return queries;
 	}
 	
+	public String toString() {
+		return this.getVariables().toString() +
+				this.getQueries().toString();
+	}
 }

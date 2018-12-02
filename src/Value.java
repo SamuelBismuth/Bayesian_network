@@ -21,4 +21,7 @@ public class Value {
 		return value;
 	}
 	
+	public String toString() {
+		return this.getValue();
+	}
 }

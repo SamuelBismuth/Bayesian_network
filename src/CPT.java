@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -22,20 +24,12 @@ public class CPT {
 	 */
 	protected void update(Values values, String variableName) {
 		String prepareString = "";
-		Set<Event> other = this.getTable().iterator().next().getOtherEvents(variableName);
-		if (other == null)
-			TxtToObjects.createProbability( 
-					"=" + 
-					values.getHidden().getValue() + "," +
-					Double.toString(this.getSum()));
-		else {
-			for (Event event : this.getTable().iterator().next().getOtherEvents(variableName))
+		if(this.getTable().iterator().next().getEvents().getEvents().size() > 1) 
+			for (Event event : this.getStable())
 				prepareString += event.getValue().getValue() + ",";
-			TxtToObjects.createProbability(prepareString + 
-					"=" + 
-					values.getHidden().getValue() + "," +
-					Double.toString(this.getSum()));
-		}
+		this.getTable().add(TxtToObjects.createProbability(prepareString + 
+				values.getHidden().getValue() + "," +
+				Double.toString(1 - this.getSum())));
 	}
 
 	protected double getSum() {
@@ -45,11 +39,24 @@ public class CPT {
 		return answer;
 	}
 
+	protected Set<Event> getStable() {
+		return new LinkedHashSet<>(new ArrayList<>
+		(this.getTable().iterator().next().getEvents().getEvents())
+		.subList(0, this.getTable().iterator().next().getEvents().getEvents().size() - 1));
+	}
+
 	/**
 	 * @return the table
 	 */
 	public Set<Probability> getTable() {
 		return table;
+	}
+
+	public String toString() {
+		String answer = "";
+		for (Probability probability : this.getTable())
+			answer += probability.toString() + "\n";
+		return answer;
 	}
 
 }

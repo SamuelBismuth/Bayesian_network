@@ -1,12 +1,93 @@
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 class TxtToObjectsTest {
+	
+	List<String> txt1 = Arrays.asList("Network\n", 
+			"Variables: B,E,A,J,M\n",
+			"\n",
+			"Var B\n",
+			"Values: true, false\n",
+			"Parents: none\n",
+			"CPT:\n",
+			"=true,0.001\n",
+			"\n", 
+			"Var E\n",
+			"Values: true, false\n",
+			"Parents: none\n",
+			"CPT:\n", 
+			"=true,0.002\n", 
+			"\n",
+			"Var A\n", 
+			"Values: true, false\n", 
+			"Parents: B,E\n", 
+			"CPT:\n", 
+			"true,true,=true,0.95\n",
+			"true,false,=true,0.94\n", 
+			"false,true,=true,0.29\n", 
+			"false,false,=true,0.001\n", 
+			"\n",
+			"Var J\n", 
+			"Values: true, false\n", 
+			"Parents: A\n",
+			"CPT:\n",
+			"true,=true,0.9\n", 
+			"false,=true,0.05\n", 
+			"\n",
+			"Var M\n", 
+			"Values: true, false\n", 
+			"Parents: A\n",
+			"CPT:\n",
+			"true,=true,0.7\n",
+			"false,=true,0.01\n", 
+			"\n",
+			"Queries\n", 
+			"P(B=true|J=true,M=true),1\n", 
+			"P(B=true|J=true,M=true),2\n", 
+			"P(B=true|J=true,M=true),3\n", 
+			"P(J=true|B=true),1\n",
+			"P(J=true|B=true),2\n", 
+			"\n");
+	
+	List<String> txt2 = Arrays.asList("Network\n",
+			"Variables: A,B,C\n",
+			"\n",
+			"Var A\n",
+			"Values: true, false\n",
+			"Parents: none\n",
+			"CPT:\n",
+			"=true,0.1\n", 
+			"\n",
+			"Var B\n", 
+			"Values: set, noset, maybe\n",
+			"Parents: none\n",
+			"CPT:\n",
+			"=set,0.2,=noset,0.5\n", 
+			"\n",
+			"Var C\n", 
+			"Values: go, stay, run\n", 
+			"Parents: A,B\n",
+			"CPT:\n",
+			"true,set,=go,0.25,=stay,0.7\n", 
+			"true,noset,=go,0.2,=stay,0.6\n", 
+			"true,maybe,=go,0.3,=stay,0.2\n", 
+			"false,set,=go,0.55,=stay,0.15\n", 
+			"false,noset,=go,0.28,=stay,0.3\n", 
+			"false,maybe,=go,0.45,=stay,0.25\n", 
+			"\n", 
+			"Queries\n", 
+			"P(C=run|B=set,A=true),1\n", 
+			"P(C=run|B=set,A=true),2\n", 
+			"P(C=run|B=set,A=true),3\n", 
+			"P(A=true|C=run),1\n",
+			"P(A=true|C=run),2\n", 
+			"\n");
 
 	@Test
 	void testNetwork() {
-		fail("Not yet implemented");
+		Network network = TxtToObjects.createNetwork(txt2);
+		System.out.println(network.toString());
 	}
-
 }
