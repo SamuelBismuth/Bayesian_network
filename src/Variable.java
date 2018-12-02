@@ -1,4 +1,6 @@
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author sam
@@ -23,6 +25,21 @@ public class Variable {
 		this.values = values;
 		this.parents = parents;
 		this.cpts = cpts;
+	}
+
+	protected boolean isInclude(Events events) {
+		for (Event event : events.getEvents())
+			if(event.getVariable().equals(this.getName()))
+				return false;
+		return true;
+	}
+
+	protected List<Event> matchParent(List<Event> events) {
+		return events.
+				stream().
+				filter(thisEvent -> this.getParents().stream().
+				anyMatch(parent -> parent.equals(thisEvent.getVariable()))).
+				collect(Collectors.toList());
 	}
 
 	/**
@@ -54,14 +71,14 @@ public class Variable {
 	}
 
 	public String toString() {
-		if ( this.getParents() == null)
+		if (this.getParents() == null)
 			return "Name:" + this.getName() + "\n" +
-					"Values:" + this.getValues().getValues().toString() + "\n" +
-					"Parents: null \n" +
-					"CPTs: \n" + this.getCpts().toString() + "\n";
+			"Values:" + this.getValues().getValues().toString() + "\n" +
+			"Parents: null \n" +
+			"CPTs: \n" + this.getCpts().toString() + "\n";
 		return "Name:" + this.getName() + "\n" +
-				"Values:" + this.getValues().getValues().toString() + "\n" +
-				"Parents:" + this.getParents().toString() + "\n" +
-				"CPTs: \n" + this.getCpts().toString() + "\n";
+		"Values:" + this.getValues().getValues().toString() + "\n" +
+		"Parents:" + this.getParents().toString() + "\n" +
+		"CPTs: \n" + this.getCpts().toString() + "\n";
 	}
 }

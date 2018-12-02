@@ -42,6 +42,8 @@ public class Algorithms {
 				network, 
 				query.getCondition().getVariable_dependencies(),
 				query.getCondition().getVariable_probabilty());
+		System.out.println("Y1:" + Y1);
+		System.out.println("Y2:" + Y2);
 		addition_counter++;
 		return df.format((1 / (Y1 + Y2)) * Y1) + "," +
 		Integer.toString(addition_counter) + "," +

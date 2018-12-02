@@ -1,5 +1,4 @@
 import java.text.DecimalFormat;
-import java.util.List;
 
 /**
  * @author sam
@@ -12,8 +11,8 @@ import java.util.List;
 public class Algorithms {
 
 	// Two static variable counter.
-	static protected int addition_counter 		 = 0,
-			mulitiplication_counter = 0;
+	public static int additionCounter 		  = 0,
+			mulitiplicationCounter  = 0;
 	// The format for the round.
 	static DecimalFormat df = new DecimalFormat("#0.00000");
 
@@ -23,20 +22,19 @@ public class Algorithms {
 	 * @param network
 	 * @param query
 	 * @return the result of the query including the counter in the well form.
+	 * Y1:5.922425899999999E-4
+		Y2:0.001491857649
+		Y1:8.49017E-4
+		Y2:1.5098300000000004E-4
 	 */
 	protected static String algorithm_1(Network network, Query query) {	
-		addition_counter = mulitiplication_counter = 0; 
-		double Y1 = Util.prepare_marginalization(
-				network, 
-				query.get_all_probability());
-		double Y2 = Util.calculate_inverse_marginalization(
-				network, 
-				query.getCondition().getVariable_dependencies(),
-				query.getCondition().getVariable_probabilty());
-		addition_counter++;
+		additionCounter = mulitiplicationCounter = 0; 
+		double Y1 = Util.prepareMarginalization(network, query);
+		double Y2 = Util.prepareInverseMarginalization(network, query);
+		additionCounter++;
 		return df.format((1 / (Y1 + Y2)) * Y1) + "," +
-		Integer.toString(addition_counter) + "," +
-		Integer.toString(mulitiplication_counter);
+		Integer.toString(additionCounter) + "," +
+		Integer.toString(mulitiplicationCounter);
 	}
 
 	/**
@@ -46,7 +44,7 @@ public class Algorithms {
 	 * @return the result of the query including the counter in the well form.
 	 */
 	protected static String algorithm_2(Network network, Query query) {
-		addition_counter = mulitiplication_counter = 0; 
+		/*addition_counter = mulitiplication_counter = 0; 
 		List<Variable> deleted_variable = network.delete_irrelevant(query.get_all_variable(network));
 		Factors factors = network.create_factors(network.getVariables(), 
 				query.getCondition().getVariable_dependencies());
@@ -57,7 +55,8 @@ public class Algorithms {
 		return df.format(factor.get_final_double(query.getCondition().
 				getVariable_probabilty().getVariable_value())) + "," +
 				Integer.toString(addition_counter) + "," +
-				Integer.toString(mulitiplication_counter);
+				Integer.toString(mulitiplication_counter);*/
+		return null;
 	}
 
 	/**

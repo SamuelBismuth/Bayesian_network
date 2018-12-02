@@ -87,7 +87,7 @@ class TxtToObjectsTest {
 
 	@Test
 	void testNetwork() {
-		Network network = TxtToObjects.createNetwork(txt2);
+		Network network = TxtToObjects.createNetwork(txt1);
 		System.out.println(network.toString());
 	}
 }

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -11,8 +12,8 @@ import java.util.Set;
  */
 public class TxtToObjects {
 
-	static Set<String> dependentVariable;
-	static Network networkStatic;
+	static List<String> dependentVariable;
+
 	/**
 	 * This method creates the network from the txt.
 	 * @param txt
@@ -23,8 +24,7 @@ public class TxtToObjects {
 		Variables variables = createVariables(it);
 		it.next();
 		Queries queries = createQueries(it);
-		networkStatic = new Network(variables, queries);
-		return networkStatic;
+		return new Network(variables, queries);
 	}
 
 	/**
@@ -66,7 +66,10 @@ public class TxtToObjects {
 		String variableName =  it.next().split(" ")[1];
 		Values values = createValues(it.next().split(":")[1]);
 		Set<String> parents = createParents(it.next().split(" ")[1]);
-		dependentVariable = UtilList.concatenateItemWithSet(parents, variableName);
+		if(parents == null) 
+			dependentVariable = UtilList.concatenateItemWithlist(null, variableName);
+		else
+			dependentVariable = UtilList.concatenateItemWithlist(new ArrayList<>(parents), variableName);
 		CPTs cpts = createCPTs(it, values, variableName);
 		return new Variable(variableName, values, parents, cpts);
 	}

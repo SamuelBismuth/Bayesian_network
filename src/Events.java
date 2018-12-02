@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -15,7 +16,14 @@ public class Events {
 	public Events(Set<Event> events) {
 		this.events = events;
 	}
-
+	
+	protected Event getDynamicEvent() {
+		return new ArrayList<>(this.getEvents()).get(this.getEvents().size() - 1);
+	}
+	
+	public double getProbability(Value value) {
+		return 0;
+	}
 	/**
 	 * @return the events
 	 */

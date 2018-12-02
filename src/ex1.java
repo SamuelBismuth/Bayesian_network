@@ -21,6 +21,7 @@ public class ex1 {
 		}
 		Network network = TxtToObjects.createNetwork(txt);
 		List<String> answers = RunQuery.runQueries(network);
+		System.out.println(answers);
 		OutputTxt.writeAnswer(answers);
 	}
 }
