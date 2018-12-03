@@ -102,20 +102,27 @@ public class Variables {
 			for (Probability probability : cpt.getTable())
 				if (probability.match(evidences))
 					probabilities.add(probability);
+		//System.out.println(this.getFactorVariable(evidences, variable));
 		return new Factor(this.getFactorVariable(evidences, variable), probabilities);
 	}
 
+	/**
+	 * Can't return a null value.
+	 * @param evidences
+	 * @param variable
+	 * @return
+	 */
 	private Set<Variable> getFactorVariable(Evidences evidences, Variable variable) {
 		Set<Variable> setVariables = new LinkedHashSet<>();
-		if (variable.getParents() != null)
-			setVariables = this.findVariablesByNames(
-					evidences.
-					getEvents().
-					getEvents().
-					stream().map(event -> event.getVariable()).
-					filter(variable.getParents()::contains).collect(Collectors.toSet()));
-		if(evidences.getEvents().getEvents().stream().
-				anyMatch(event -> event.getVariable().equals(variable.getName())))
+		if (variable.getParents() != null) {
+			Set<String> parentsMatched = variable.getParents();
+			parentsMatched.removeAll(evidences.getEvents().getEvents().stream().
+					map(event -> event.getVariable()).collect(Collectors.toList()));
+			setVariables = this.findVariablesByNames(new LinkedHashSet<>(parentsMatched));
+		}
+		if(!evidences.getEvents().getEvents().stream().
+				map(event -> event.getVariable()).collect(Collectors.toSet()).
+				contains(variable.getName())) 
 			setVariables.add(variable);
 		return setVariables;
 	}

@@ -30,6 +30,18 @@ public class Probability {
 						equals(variableName)).
 				collect(Collectors.toSet());
 	}
+	
+	protected boolean match(Evidences evidences) {
+		return this.getEvents().getEvents().stream().
+				allMatch(thisEvent -> 
+				{ for (Event evidenceEvent : evidences.getEvents().getEvents())
+					if(evidenceEvent.getVariable().equals(thisEvent.getVariable())
+							&& !evidenceEvent.getValue().getValue().
+							equals(thisEvent.getValue().getValue())) 
+						return false;
+				return true;
+				});
+	}
 
 	/**
 	 * @return the events
@@ -47,18 +59,6 @@ public class Probability {
 
 	public String toString() {
 		return this.getEvents().toString() + "=" + this.getProbability();
-	}
-
-	public boolean match(Evidences evidences) {
-		return this.getEvents().getEvents().stream().
-				allMatch(thisEvent -> 
-				{ for (Event evidenceEvent : evidences.getEvents().getEvents())
-					if(evidenceEvent.getVariable().equals(thisEvent.getVariable())
-							&& !evidenceEvent.getValue().getValue().
-							equals(thisEvent.getValue().getValue())) 
-						return false;
-				return true;
-				});
 	}
 
 }

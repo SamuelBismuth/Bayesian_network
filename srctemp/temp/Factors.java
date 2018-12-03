@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import jdk.internal.dynalink.linker.LinkerServices.Implementation;
-
 /**
  * @author sam
  * This class represents the object factors, which include some {@link Factor}.

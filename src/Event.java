@@ -1,4 +1,3 @@
-
 /**
  * @author sam
  * This class represents the object {@link Event}.
@@ -14,11 +13,10 @@ public class Event {
 	 * @param value
 	 */
 	public Event(String variable, Value value) {
-		super();
 		this.variable = variable;
 		this.value = value;
 	}
-
+	
 	/**
 	 * @return the variable
 	 */

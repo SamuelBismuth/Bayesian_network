@@ -1,9 +1,10 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author sam
@@ -45,12 +46,35 @@ public class Factors {
 					this.getFactors().add(factor);
 					return;
 				}
-				Factor factor = unionAll(match(variable), variable);  // join.
+				Factor factor = unionAll(this.match(variable), variable);  // join.
 				factor = eliminate(factor, variable); 
 				factors.removeAll(match(variable));
 				factors.add(factor);
 			}
 		}
+	}
+	
+	private Factor unionAll(List<Factor> factors, Variable variable) {
+		while(factors.size() > 1) {
+			Collections.sort(factors, new FactorComparator());
+			factors.set(0, factors.get(0).join(factors.get(1)));		
+			factors.remove(1);
+		}
+		return factors.get(0);
+	}
+	
+	private List<Factor> match(Variable variable) {
+		List<Factor> factors = new ArrayList<>();
+		for (Factor factor : this.getFactors()) {
+			//System.out.println("factor variable" +factor.getVariables());
+			//System.out.println("variable" +variable.getName());
+			if(factor.getVariables().stream().
+					map(var -> var.getName()).collect(Collectors.toList()).
+					contains(variable.getName())) {
+				factors.add(factor);
+			}
+		}
+		return factors;
 	}
 
 	/**
@@ -62,20 +86,16 @@ public class Factors {
 	private Factor eliminate(Factor factor, Variable variable) {
 		factor.getVariables().remove(variable);
 		List<List<Event>> events = Util.cartesianProduct(new Variables(factor.getVariables()));
-		c_p = new ArrayList<>();
+		Set<Probability> newProbability = new LinkedHashSet<>();
 		Algorithms.additionCounter += events.size();
-		for (List<Event> event1 : events) {
+		for (List<Event> listEvent : events) {
 			double d = 0.0;
-			for (Cond_prob cp : factor.getC_p()) 
-				for(Condition cond : cp.getProbability().keySet()) 
-					if (Util.are_contained(cond, prob1)) {
-						d += cp.getProbability().get(cond);
-					}
-			HashMap<Condition, Double> probability = new HashMap<>();
-			probability.put(new Condition(prob1), d);
-			c_p.add(new Cond_prob(probability));
+			for (Probability probability : factor.getProbability()) 
+				if (probability.getEvents().isContained(listEvent)) 
+					d += probability.getProbability();
+			newProbability.add(new Probability(new Events(new LinkedHashSet<>(listEvent)), d));
 		}
-		return new Factor(factor.getVariables(), c_p);
+		return new Factor(factor.getVariables(), newProbability);
 	}
 
 	/**

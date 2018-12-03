@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,9 +22,6 @@ public class Events {
 		return new ArrayList<>(this.getEvents()).get(this.getEvents().size() - 1);
 	}
 	
-	public double getProbability(Value value) {
-		return 0;
-	}
 	/**
 	 * @return the events
 	 */
@@ -36,6 +34,17 @@ public class Events {
 		for(Event event : this.getEvents())
 			answer += event.toString() + ",";
 		return answer;
+	}
+
+	/**
+	 * TODO: Implement it.
+	 * @param listEvent
+	 * @return
+	 */
+	public boolean isContained(List<Event> listEvent) {
+		System.out.println("this" + this.toString());
+		System.out.println(listEvent.toString());
+		return false;
 	}
 	
 }
