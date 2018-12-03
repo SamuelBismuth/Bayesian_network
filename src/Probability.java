@@ -57,6 +57,13 @@ public class Probability {
 		return probability;
 	}
 
+	/**
+	 * @param probability the probability to set
+	 */
+	public void setProbability(double probability) {
+		this.probability = probability;
+	}
+
 	public String toString() {
 		return this.getEvents().toString() + "=" + this.getProbability();
 	}

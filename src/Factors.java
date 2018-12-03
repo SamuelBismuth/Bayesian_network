@@ -13,8 +13,9 @@ import java.util.stream.Collectors;
 public class Factors {
 
 	private Set<Factor> factors;  // The factors.
-	private Set<Variable> variableFactors;  // All the variables of the factors.
-	private Event query;  // The query we need to answer.
+	private Variables variableFactors;  // All the variables of the factors.
+	private Variables variables;
+	private Query query;  // The query we need to answer.
 
 	/**
 	 * Constructor for {@link Factors}.
@@ -22,9 +23,10 @@ public class Factors {
 	 * @param variableFactors
 	 * @param query
 	 */
-	public Factors(Set<Factor> factors2, Set<Variable> variableFactors, Event query) {
+	public Factors(Set<Factor> factors2, Variables variableFactors, Variables variables, Query query) {
 		this.factors = factors2;
 		this.variableFactors = variableFactors;
+		this.variables = variables;
 		this.query = query;
 	}
 
@@ -32,28 +34,43 @@ public class Factors {
 	 * This function run a query.
 	 * i.e., this method do: union, and eliminate for all the variables of the factors.
 	 */
-	public void run(boolean flagAlgo2) {
-		if(flagAlgo2)
-			Collections.sort(new ArrayList<>(this.getVariableFactors()),
-					new VariableComparatorAlgorithm2());
-		//else
-		//Collections.sort(variable_factors, new Variable_comparator_algorithm3(this));
-		while(this.getFactors().size() > 1) {
-			for(Variable variable : this.getVariableFactors()) {	
-				if (this.getFactors().size() == 1) {
-					Factor factor = eliminate(this.getFactors().iterator().next(), variable); 
-					this.getFactors().clear();
-					this.getFactors().add(factor);
-					return;
-				}
-				Factor factor = unionAll(this.match(variable), variable);  // join.
-				factor = eliminate(factor, variable); 
-				factors.removeAll(match(variable));
-				factors.add(factor);
-			}
+	public void run() {
+		for (Variable variable : this.getHiddenVariable()) {
+			Factor factor = unionAll(this.match(variable), variable);  // join.
+			factor = eliminate(factor, variable); 
+			this.getFactors().removeAll(match(variable));
+			this.getFactors().add(factor);
+		}
+		for (Variable variable : this.getRemainingVariable()) {
+			Factor factor = unionAll(this.match(variable), variable);  // join.
+			factor = eliminate(factor, variable); 
+			this.getFactors().removeAll(match(variable));
+			this.getFactors().add(factor);
 		}
 	}
-	
+
+	private List<Variable> getHiddenVariable() {
+		List<Variable> hiddenVariableSorted = this.getVariableFactors().getVariables().stream().
+				filter(var -> {
+					for(Variable varRemaining : this.getRemainingVariable())
+						if (varRemaining.getName().equals(var.getName()))
+							return false;
+					return true;
+				}).collect(Collectors.toList());
+		Collections.sort(hiddenVariableSorted, new VariableComparatorAlgorithm2());
+		return hiddenVariableSorted;
+	}
+
+	private List<Variable> getRemainingVariable() {
+		List<Variable> remainingVariableSorted =  new ArrayList<>(this.getVariables().
+				findVariablesByNames(UtilList.concatenateItemWithSet(
+				query.getEvidences().getEvents().getEvents().
+				stream().map(event -> event.getVariable()).collect(Collectors.toSet()),
+				query.getQuery().getVariable())));
+		Collections.sort(remainingVariableSorted, new VariableComparatorAlgorithm2());
+		return remainingVariableSorted;
+	}
+
 	private Factor unionAll(List<Factor> factors, Variable variable) {
 		while(factors.size() > 1) {
 			Collections.sort(factors, new FactorComparator());
@@ -62,12 +79,10 @@ public class Factors {
 		}
 		return factors.get(0);
 	}
-	
+
 	private List<Factor> match(Variable variable) {
 		List<Factor> factors = new ArrayList<>();
 		for (Factor factor : this.getFactors()) {
-			//System.out.println("factor variable" +factor.getVariables());
-			//System.out.println("variable" +variable.getName());
 			if(factor.getVariables().stream().
 					map(var -> var.getName()).collect(Collectors.toList()).
 					contains(variable.getName())) {
@@ -91,7 +106,7 @@ public class Factors {
 		for (List<Event> listEvent : events) {
 			double d = 0.0;
 			for (Probability probability : factor.getProbability()) 
-				if (probability.getEvents().isContained(listEvent)) 
+				if (probability.getEvents().isIncluded(listEvent)) 
 					d += probability.getProbability();
 			newProbability.add(new Probability(new Events(new LinkedHashSet<>(listEvent)), d));
 		}
@@ -108,14 +123,21 @@ public class Factors {
 	/**
 	 * @return the variableFactors
 	 */
-	public Set<Variable> getVariableFactors() {
+	public Variables getVariableFactors() {
 		return variableFactors;
+	}
+
+	/**
+	 * @return the variables
+	 */
+	public Variables getVariables() {
+		return variables;
 	}
 
 	/**
 	 * @return the query
 	 */
-	public Event getQuery() {
+	public Query getQuery() {
 		return query;
 	}
 
@@ -133,7 +155,6 @@ class VariableComparatorAlgorithm2 implements Comparator<Variable> {
 	@Override
 	public int compare(Variable o1, Variable o2) {
 		return o1.getName().compareTo(o2.getName());
-
 	}
 
 }

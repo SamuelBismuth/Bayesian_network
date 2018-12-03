@@ -93,7 +93,22 @@ public class Variables {
 		Set<Factor> factors = new LinkedHashSet<>();
 		for(Variable variable : this.getVariables())
 			factors.add(this.createFactor(query.getEvidences(), variable));
-		return new Factors(factors, this.getVariables(), query.getQuery());
+		return new Factors(factors, new Variables(UtilList.concatenateItemWithSet(
+				this.getInverse(
+						query.getEvidences().getEvents().getEvents().
+						stream().map(event -> event.getVariable()).
+						collect(Collectors.toSet())), 
+				this.findVariableByName(query.getQuery().getVariable()))), 
+				new Variables(this.getVariables()), query);
+	}
+
+	private Set<Variable> getInverse(Set<String> variables) {
+		return this.getVariables().stream().filter(var -> {
+			for(String var2 : variables)
+				if(var.getName().equals(var2))
+					return false;
+			return true;
+		}).collect(Collectors.toSet());
 	}
 
 	private Factor createFactor(Evidences evidences, Variable variable) {
@@ -102,7 +117,6 @@ public class Variables {
 			for (Probability probability : cpt.getTable())
 				if (probability.match(evidences))
 					probabilities.add(probability);
-		//System.out.println(this.getFactorVariable(evidences, variable));
 		return new Factor(this.getFactorVariable(evidences, variable), probabilities);
 	}
 

@@ -29,11 +29,11 @@ public class RunQuery {
 	private static String create_answer(Network network, Query query) {
 		switch(query.getAlgorithm()) {
 		case '1':
-			return Algorithms.algorithm_1(network, query);
+			return Algorithms.algorithm1(network, query);
 		case '2':
-			return Algorithms.algorithm_2(network, query);
+			return Algorithms.algorithm2(network, query);
 		case '3':
-			return Algorithms.algorithm_3(network, query);
+			return Algorithms.algorithm3(network, query);
 		default:
 			return null;
 		}

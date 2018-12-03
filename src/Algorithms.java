@@ -28,7 +28,7 @@ public class Algorithms {
 		Y1:8.49017E-4
 		Y2:1.5098300000000004E-4
 	 */
-	protected static String algorithm_1(Network network, Query query) {	
+	protected static String algorithm1(Network network, Query query) {	
 		additionCounter = mulitiplicationCounter = 0; 
 		double Y1 = Util.prepareMarginalization(network, query);
 		double Y2 = Util.prepareInverseMarginalization(network, query);
@@ -44,20 +44,18 @@ public class Algorithms {
 	 * @param query
 	 * @return the result of the query including the counter in the well form.
 	 */
-	protected static String algorithm_2(Network network, Query query) {
+	protected static String algorithm2(Network network, Query query) {
 		additionCounter = mulitiplicationCounter = 0; 
 		Set<Variable> deletedVariable = network.getVariables().
 				deleteIrrelevant(network.getVariables().findVariablesByNames(query.getAllVariableName()));
 		Factors factors = network.getVariables().createFactors(query);
-		factors.run(true);
-		//Factor factor = factors.unionAll(factors.getFactors(), network.get_searched_query(query));
-		//factor.normalize();*/
+		factors.run();
+		factors.getFactors().iterator().next().normalize();
 		network.getVariables().getVariables().addAll(deletedVariable);
-		/*return df.format(factor.get_final_double(query.getCondition().
-				getVariable_probabilty().getVariable_value())) + "," +
+		return df.format(factors.getFactors().iterator().next().
+				getFinalProbability(query.getQuery().getValue())) + "," +
 				Integer.toString(additionCounter) + "," +
-				Integer.toString(mulitiplicationCounter);*/
-		return null;
+				Integer.toString(mulitiplicationCounter);
 	}
 
 	/**
@@ -66,7 +64,7 @@ public class Algorithms {
 	 * @param query
 	 * @return
 	 */
-	protected static String algorithm_3(Network network, Query query) {
+	protected static String algorithm3(Network network, Query query) {
 		return null;
 	}
 

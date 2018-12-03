@@ -52,6 +52,24 @@ public class Factor {
 		return 0;
 	}		
 
+	public void normalize() {
+		Algorithms.additionCounter += this.getProbability().size() - 1;
+		double lambda = 0.0;
+		for(Probability prob : this.getProbability()) 
+			lambda += prob.getProbability();
+		for(Probability prob2 : this.getProbability()) 
+			prob2.setProbability(prob2.getProbability() / lambda);
+	}
+	
+	public double getFinalProbability(Value value) {
+		for (Probability probability : this.getProbability()) {
+			if(probability.getEvents().getEvents().iterator().next()
+					.getValue().getValue().equals(value.getValue()))
+				return probability.getProbability();
+		}
+		return 0.0;
+	}
+
 	/**
 	 * @return the variables
 	 */
@@ -64,6 +82,10 @@ public class Factor {
 	 */
 	public Set<Probability> getProbability() {
 		return probability;
+	}
+
+	public String toString() {
+		return "Var: " + this.getVariables().toString() + "Prob: " + this.getProbability().toString() + "\n";
 	}
 
 }

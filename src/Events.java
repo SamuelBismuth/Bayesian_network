@@ -41,10 +41,16 @@ public class Events {
 	 * @param listEvent
 	 * @return
 	 */
-	public boolean isContained(List<Event> listEvent) {
-		System.out.println("this" + this.toString());
-		System.out.println(listEvent.toString());
-		return false;
+	public boolean isIncluded(List<Event> listEvent) {
+		return listEvent.stream().
+				allMatch(thisEvent -> 
+				{ for (Event evidenceEvent : this.getEvents())
+					if(evidenceEvent.getVariable().equals(thisEvent.getVariable())
+							&& !evidenceEvent.getValue().getValue().
+							equals(thisEvent.getValue().getValue())) 
+						return false;
+				return true;
+				});
 	}
 	
 }
