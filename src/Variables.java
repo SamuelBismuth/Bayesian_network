@@ -1,3 +1,4 @@
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class Variables {
 
 	/**
 	 * This function return the variable given the variable name.
-	 * @param variable_name
+	 * @param variableName
 	 * @return the Variable.
 	 */
 	protected Variable findVariableByName(String variableName) {
@@ -38,6 +39,18 @@ public class Variables {
 		return null;
 	}
 
+	/**
+	 * This method find the variables given the names of the variables.
+	 * @param variablesNames
+	 * @return a list of variables
+	 */
+	protected Set<Variable> findVariablesByNames(Set<String> variablesNames) {
+		Set<Variable> variablesByNames = new LinkedHashSet<>();
+		for(String variable : variablesNames) 
+			variablesByNames.add(findVariableByName(variable));
+		return variablesByNames;
+	}
+
 	protected double calculateProbability(List<Event> events) {
 		double answer = 1.0;
 		Algorithms.mulitiplicationCounter--;
@@ -46,14 +59,65 @@ public class Variables {
 			Variable variable = this.findVariableByName(event.getVariable());
 			if(variable.getParents() == null) 
 				answer *= variable.getCpts().getProbabilityAloneSoldier(event.getValue());
-			else {
-				//System.out.println(variable.getCpts().getProbability(event.getValue(), 
-					//	variable.matchParent(events)));
+			else 
 				answer *= variable.getCpts().getProbability(event.getValue(), 
 						variable.matchParent(events));
-			}
 		}
 		return answer;
+	}
+
+	public Set<Variable> deleteIrrelevant(Set<Variable> all) {
+		Set<Variable> relevantVariable = new LinkedHashSet<>(all);
+		for(Variable variable : all) 
+			this.get_ancestor(relevantVariable, variable);
+		Set<Variable> allVariable = new LinkedHashSet<>(this.getVariables());
+		allVariable.removeAll(relevantVariable);
+		this.setVariables(relevantVariable);
+		return allVariable;
+	}
+
+	/**
+	 * For a given variable, this function return all this ancestor.
+	 * @param ancestors
+	 * @param variable
+	 */
+	private void get_ancestor(Set<Variable> ancestors, Variable variable) {
+		if(variable.getParents() != null) {
+			ancestors.addAll(this.findVariablesByNames(variable.getParents()));
+			for (Variable parent : this.findVariablesByNames(variable.getParents()))
+				get_ancestor(ancestors, parent);
+		}
+	}
+
+	protected Factors createFactors(Query query) {
+		Set<Factor> factors = new LinkedHashSet<>();
+		for(Variable variable : this.getVariables())
+			factors.add(this.createFactor(query.getEvidences(), variable));
+		return new Factors(factors, this.getVariables(), query.getQuery());
+	}
+
+	private Factor createFactor(Evidences evidences, Variable variable) {
+		Set<Probability> probabilities = new LinkedHashSet<>();
+		for (CPT cpt : variable.getCpts().getCpts())
+			for (Probability probability : cpt.getTable())
+				if (probability.match(evidences))
+					probabilities.add(probability);
+		return new Factor(this.getFactorVariable(evidences, variable), probabilities);
+	}
+
+	private Set<Variable> getFactorVariable(Evidences evidences, Variable variable) {
+		Set<Variable> setVariables = new LinkedHashSet<>();
+		if (variable.getParents() != null)
+			setVariables = this.findVariablesByNames(
+					evidences.
+					getEvents().
+					getEvents().
+					stream().map(event -> event.getVariable()).
+					filter(variable.getParents()::contains).collect(Collectors.toSet()));
+		if(evidences.getEvents().getEvents().stream().
+				anyMatch(event -> event.getVariable().equals(variable.getName())))
+			setVariables.add(variable);
+		return setVariables;
 	}
 
 	/**
@@ -61,6 +125,13 @@ public class Variables {
 	 */
 	public Set<Variable> getVariables() {
 		return variables;
+	}
+
+	/**
+	 * @param variables the variables to set
+	 */
+	public void setVariables(Set<Variable> variables) {
+		this.variables = variables;
 	}
 
 	public String toString() {

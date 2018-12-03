@@ -1,4 +1,5 @@
 import java.text.DecimalFormat;
+import java.util.Set;
 
 /**
  * @author sam
@@ -44,18 +45,18 @@ public class Algorithms {
 	 * @return the result of the query including the counter in the well form.
 	 */
 	protected static String algorithm_2(Network network, Query query) {
-		/*addition_counter = mulitiplication_counter = 0; 
-		List<Variable> deleted_variable = network.delete_irrelevant(query.get_all_variable(network));
-		Factors factors = network.create_factors(network.getVariables(), 
-				query.getCondition().getVariable_dependencies());
+		additionCounter = mulitiplicationCounter = 0; 
+		Set<Variable> deletedVariable = network.getVariables().
+				deleteIrrelevant(network.getVariables().findVariablesByNames(query.getAllVariableName()));
+		Factors factors = network.getVariables().createFactors(query);
 		factors.run(true);
-		Factor factor = factors.unionAll(factors.getFactors(), network.get_searched_query(query));
-		factor.normalize();
-		network.getVariables().addAll(deleted_variable);
-		return df.format(factor.get_final_double(query.getCondition().
+		//Factor factor = factors.unionAll(factors.getFactors(), network.get_searched_query(query));
+		//factor.normalize();*/
+		network.getVariables().getVariables().addAll(deletedVariable);
+		/*return df.format(factor.get_final_double(query.getCondition().
 				getVariable_probabilty().getVariable_value())) + "," +
-				Integer.toString(addition_counter) + "," +
-				Integer.toString(mulitiplication_counter);*/
+				Integer.toString(additionCounter) + "," +
+				Integer.toString(mulitiplicationCounter);*/
 		return null;
 	}
 

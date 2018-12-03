@@ -9,7 +9,7 @@ public class Probability {
 
 	private Events events;  // All the events for the probability.
 	private double probability;  // The probability (number).
-	
+
 	/**
 	 * Constructor for {@link Probability}.
 	 * @param events
@@ -28,9 +28,9 @@ public class Probability {
 				stream().
 				filter(item -> item.getVariable().
 						equals(variableName)).
-						collect(Collectors.toSet());
+				collect(Collectors.toSet());
 	}
-	
+
 	/**
 	 * @return the events
 	 */
@@ -44,9 +44,21 @@ public class Probability {
 	public double getProbability() {
 		return probability;
 	}
-	
+
 	public String toString() {
 		return this.getEvents().toString() + "=" + this.getProbability();
 	}
-	
+
+	public boolean match(Evidences evidences) {
+		return this.getEvents().getEvents().stream().
+				allMatch(thisEvent -> 
+				{ for (Event evidenceEvent : evidences.getEvents().getEvents())
+					if(evidenceEvent.getVariable().equals(thisEvent.getVariable())
+							&& !evidenceEvent.getValue().getValue().
+							equals(thisEvent.getValue().getValue())) 
+						return false;
+				return true;
+				});
+	}
+
 }

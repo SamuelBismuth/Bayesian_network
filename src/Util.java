@@ -49,6 +49,15 @@ public class Util {
 		}
 		return answer;
 	}
+	
+	protected static List<List<Event>> cartesianProduct(Variables hiddenVariable) {
+		List<List<Event>> events = new ArrayList<List<Event>>();
+		for(Variable variable : hiddenVariable.getVariables()) 
+			events.add(createListEvent(
+					variable.getName(), 
+					variable.getValues()));
+		return calculateCartesianProduct(events);
+	}
 
 	/**
 	 * This method do a Cartesian product for two given list.
@@ -75,15 +84,6 @@ public class Util {
 			}
 		}
 		return resultLists;
-	}
-
-	private static List<List<Event>> cartesianProduct(Variables hiddenVariable) {
-		List<List<Event>> events = new ArrayList<List<Event>>();
-		for(Variable variable : hiddenVariable.getVariables()) 
-			events.add(createListEvent(
-					variable.getName(), 
-					variable.getValues()));
-		return calculateCartesianProduct(events);
 	}
 
 	private static List<Event> createListEvent(String name, Values values) {

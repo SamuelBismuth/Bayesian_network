@@ -13,7 +13,7 @@ public class ex1 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		List<String> txt = InputTxt.readFileInList("input/input2.txt"); 
+		List<String> txt = InputTxt.readFileInList("input/input.txt"); 
 		try {
 			TxtScanner.verifyingTxt(txt.iterator());
 		} catch (WrongTxt e) {

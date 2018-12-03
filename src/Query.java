@@ -1,3 +1,6 @@
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * @author sam
  * This class represents the object {@link Query}.
@@ -21,6 +24,12 @@ public class Query {
 		this.algorithm = algorithm;
 	}
 
+	protected Set<String> getAllVariableName() {
+		return UtilList.concatenateItemWithSet(
+				this.getEvidences().getEvents().getEvents(),this.getQuery()).
+				stream().map(item->item.getVariable()).collect(Collectors.toSet());
+	}
+	
 	/**
 	 * @return the query
 	 */

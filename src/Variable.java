@@ -38,7 +38,7 @@ public class Variable {
 		return events.
 				stream().
 				filter(thisEvent -> this.getParents().stream().
-				anyMatch(parent -> parent.equals(thisEvent.getVariable()))).
+						anyMatch(parent -> parent.equals(thisEvent.getVariable()))).
 				collect(Collectors.toList());
 	}
 
@@ -81,4 +81,5 @@ public class Variable {
 		"Parents:" + this.getParents().toString() + "\n" +
 		"CPTs: \n" + this.getCpts().toString() + "\n";
 	}
+
 }

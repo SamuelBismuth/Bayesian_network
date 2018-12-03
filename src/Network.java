@@ -9,6 +9,7 @@ public class Network {
 	
 	/**
 	 * The constructor for the {@link Network}.
+	 * TODO: Make network singleton.
 	 * @param variables
 	 * @param queries
 	 */
