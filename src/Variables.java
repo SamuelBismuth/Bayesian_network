@@ -69,7 +69,7 @@ public class Variables {
 	public Set<Variable> deleteIrrelevant(Set<Variable> all) {
 		Set<Variable> relevantVariable = new LinkedHashSet<>(all);
 		for(Variable variable : all) 
-			this.get_ancestor(relevantVariable, variable);
+			this.getAncestor(relevantVariable, variable);
 		Set<Variable> allVariable = new LinkedHashSet<>(this.getVariables());
 		allVariable.removeAll(relevantVariable);
 		this.setVariables(relevantVariable);
@@ -81,11 +81,11 @@ public class Variables {
 	 * @param ancestors
 	 * @param variable
 	 */
-	private void get_ancestor(Set<Variable> ancestors, Variable variable) {
+	private void getAncestor(Set<Variable> ancestors, Variable variable) {
 		if(variable.getParents() != null) {
 			ancestors.addAll(this.findVariablesByNames(variable.getParents()));
 			for (Variable parent : this.findVariablesByNames(variable.getParents()))
-				get_ancestor(ancestors, parent);
+				getAncestor(ancestors, parent);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class Variables {
 	private Set<Variable> getFactorVariable(Evidences evidences, Variable variable) {
 		Set<Variable> setVariables = new LinkedHashSet<>();
 		if (variable.getParents() != null) {
-			Set<String> parentsMatched = variable.getParents();
+			Set<String> parentsMatched = new LinkedHashSet<>(variable.getParents());
 			parentsMatched.removeAll(evidences.getEvents().getEvents().stream().
 					map(event -> event.getVariable()).collect(Collectors.toList()));
 			setVariables = this.findVariablesByNames(new LinkedHashSet<>(parentsMatched));

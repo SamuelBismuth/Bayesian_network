@@ -53,9 +53,13 @@ public class Factors {
 		List<Variable> hiddenVariableSorted = this.getVariableFactors().getVariables().stream().
 				filter(var -> {
 					for(Variable varRemaining : this.getRemainingVariable())
-						if (varRemaining.getName().equals(var.getName()))
+						if (varRemaining.getName().equals(var.getName()) || 
+								query.getQuery().getVariable().equals(var.getName()))
 							return false;
-					return true;
+					if(!query.getQuery().getVariable().equals(var.getName()))
+						return true;
+					else
+						return false;
 				}).collect(Collectors.toList());
 		Collections.sort(hiddenVariableSorted, new VariableComparatorAlgorithm2());
 		return hiddenVariableSorted;
@@ -63,15 +67,17 @@ public class Factors {
 
 	private List<Variable> getRemainingVariable() {
 		List<Variable> remainingVariableSorted =  new ArrayList<>(this.getVariables().
-				findVariablesByNames(UtilList.concatenateItemWithSet(
-				query.getEvidences().getEvents().getEvents().
-				stream().map(event -> event.getVariable()).collect(Collectors.toSet()),
-				query.getQuery().getVariable())));
+				findVariablesByNames(query.getEvidences().getEvents().getEvents().
+				stream().map(event->event.getVariable()).
+				filter(this.getVariableFactors().getVariables().stream().
+						map(thisVariable -> thisVariable.getName()).
+						collect(Collectors.toList())::contains)
+				.collect(Collectors.toSet())));
 		Collections.sort(remainingVariableSorted, new VariableComparatorAlgorithm2());
 		return remainingVariableSorted;
 	}
 
-	private Factor unionAll(List<Factor> factors, Variable variable) {
+	protected Factor unionAll(List<Factor> factors, Variable variable) {
 		while(factors.size() > 1) {
 			Collections.sort(factors, new FactorComparator());
 			factors.set(0, factors.get(0).join(factors.get(1)));		
@@ -102,12 +108,14 @@ public class Factors {
 		factor.getVariables().remove(variable);
 		List<List<Event>> events = Util.cartesianProduct(new Variables(factor.getVariables()));
 		Set<Probability> newProbability = new LinkedHashSet<>();
-		Algorithms.additionCounter += events.size();
 		for (List<Event> listEvent : events) {
 			double d = 0.0;
+			Algorithms.additionCounter--;
 			for (Probability probability : factor.getProbability()) 
-				if (probability.getEvents().isIncluded(listEvent)) 
+				if (probability.getEvents().isIncluded(listEvent)) {
+					Algorithms.additionCounter++;
 					d += probability.getProbability();
+				}
 			newProbability.add(new Probability(new Events(new LinkedHashSet<>(listEvent)), d));
 		}
 		return new Factor(factor.getVariables(), newProbability);

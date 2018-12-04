@@ -198,7 +198,7 @@ public class TxtToObjects {
 	private static Queries createQueries(Iterator<String> it) {
 		Set<Query> queries = new LinkedHashSet<>();
 		String line = it.next();
-		while(!line.trim().isEmpty()) {
+		while(!line.trim().isEmpty() && it.hasNext()) {
 			queries.add(createQuery(line));
 			line = it.next();
 		}

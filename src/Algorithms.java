@@ -1,4 +1,5 @@
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -12,8 +13,8 @@ import java.util.Set;
 public class Algorithms {
 
 	// Two static variable counter.
-	public static int additionCounter 		  = 0,
-			mulitiplicationCounter  = 0;
+	public static int additionCounter = 0,
+			mulitiplicationCounter = 0;
 	// The format for the round.
 	static DecimalFormat df = new DecimalFormat("#0.00000");
 
@@ -23,10 +24,6 @@ public class Algorithms {
 	 * @param network
 	 * @param query
 	 * @return the result of the query including the counter in the well form.
-	 * Y1:5.922425899999999E-4
-		Y2:0.001491857649
-		Y1:8.49017E-4
-		Y2:1.5098300000000004E-4
 	 */
 	protected static String algorithm1(Network network, Query query) {	
 		additionCounter = mulitiplicationCounter = 0; 
@@ -50,9 +47,11 @@ public class Algorithms {
 				deleteIrrelevant(network.getVariables().findVariablesByNames(query.getAllVariableName()));
 		Factors factors = network.getVariables().createFactors(query);
 		factors.run();
-		factors.getFactors().iterator().next().normalize();
+		Factor factor = factors.unionAll(new ArrayList<>(factors.getFactors()), network.getVariables().
+				findVariableByName(query.getQuery().getVariable()));
+		factor.normalize();
 		network.getVariables().getVariables().addAll(deletedVariable);
-		return df.format(factors.getFactors().iterator().next().
+		return df.format(factor.
 				getFinalProbability(query.getQuery().getValue())) + "," +
 				Integer.toString(additionCounter) + "," +
 				Integer.toString(mulitiplicationCounter);

@@ -23,15 +23,9 @@ public class CPTs {
 	}
 	
 	protected double getProbability(Value value, List<Event> parentsValues) {
-		for (CPT cpt : this.getCpts()) {
-			//System.out.println("cpt" + cpt.toString());
-			//System.out.println( "parents" + parentsValues.toString());
-			if (cpt.matchStaticEvent(parentsValues)) {
-				//System.out.println("done");
+		for (CPT cpt : this.getCpts()) 
+			if (cpt.matchStaticEvent(parentsValues)) 
 				return cpt.getProbability(value);
-			}
-		}
-		//System.out.println("hi");
 		return 0.0;
 	}
 
