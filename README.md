@@ -1,5 +1,5 @@
 # Bayesian_network
-A repository for the assignment of the course Decision Algorithm
+A repository for the assignment of the course Decision Algorithm.
 
 # Project explanation
 
@@ -63,7 +63,7 @@ P(J=true|B=true),2
 Attention: The spaces, the commas, the line return must be respected.
 Please use JAVAC to run the program.
 
-# Repository explaination
+# What contains the repository?
 
 This repository include the next folders:
 - paper: In this folder, there is a paper including a proposed improvment of the Variable Elimination Algorithm.
