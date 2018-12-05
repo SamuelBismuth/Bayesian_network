@@ -13,6 +13,8 @@ public class Value {
 	public Value(String value) {
 		this.value = value;
 	}
+	
+	/*##################Getter##################*/
 
 	/**
 	 * @return the value
@@ -21,7 +23,4 @@ public class Value {
 		return value;
 	}
 	
-	public String toString() {
-		return this.getValue();
-	}
 }

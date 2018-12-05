@@ -24,14 +24,14 @@ public class TxtToObjects {
 		Variables variables = createVariables(it);
 		it.next();
 		Queries queries = createQueries(it);
-		return new Network(variables, queries);
+		return Network.getInstance(variables, queries);
 	}
 
 	/**
 	 * The function creates a new {@link Probability}.
 	 * The parameter must be of the form "true,true,true,0.95"
 	 * @param probability
-	 * @return the {@link Probability}.
+	 * @return the {@link Probability}
 	 */
 	protected static Probability createProbability(String probability) {
 		List<String> stringSplited = Arrays.asList(probability.split(","));
@@ -40,7 +40,7 @@ public class TxtToObjects {
 				createDouble(stringSplited.get(stringSplited.size() - 1)));
 	}
 
-	// Private statics functions.
+	/*##################Privates##################*/
 
 	/**
 	 * This method creates the {@link Variables} of the {@link Network}.

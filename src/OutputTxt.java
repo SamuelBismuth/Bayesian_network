@@ -12,6 +12,11 @@ import java.util.List;
  */
 public class OutputTxt {
 
+	/**
+	 * TODO: Implement it.
+	 * This function output the answer.
+	 * @param answers
+	 */
 	public static void writeAnswer(List<String> answers) {		
 	}
 

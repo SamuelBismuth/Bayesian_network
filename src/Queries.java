@@ -6,7 +6,7 @@ import java.util.Set;
  */
 public class Queries {
 
-	private Set<Query> queries;
+	private Set<Query> queries;  // The set of queries.
 
 	/**
 	 * Constructor for {@link Queries}.
@@ -15,6 +15,8 @@ public class Queries {
 	public Queries(Set<Query> queries) {
 		this.queries = queries;
 	}
+	
+	/*##################Getter##################*/
 
 	/**
 	 * @return the queries
@@ -23,11 +25,4 @@ public class Queries {
 		return queries;
 	}
 
-	public String toString() {
-		String ans = "";
-		for (Query query : this.getQueries())
-			ans += query.toString() + "\n";
-		return ans;
-	}
-	
 }

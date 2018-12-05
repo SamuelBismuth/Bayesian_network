@@ -4,7 +4,6 @@ public class TxtScanner {
 
 	/**
 	 * This method check roughly the format of the txt.
-	 * TODO: Need to improve the checking.
 	 * @param iterator
 	 * @throws Wrong_txt
 	 */
@@ -19,4 +18,5 @@ public class TxtScanner {
 				return;
 		throw new WrongTxt("The file doesn't include Queries...");
 	}
+	
 }

@@ -16,10 +16,16 @@ public class Values {
 		this.values = values;
 	}
 	
+	/**
+	 * This function returns the hidden value between all the values.
+	 * @return the hidden {@link Value}
+	 */
 	protected Value getHidden() {
 		return this.getValues().stream().reduce((first, second) -> second)
 		  .orElse(null);
 	}
+	
+	/*##################Getter##################*/
 
 	/**
 	 * @return the values

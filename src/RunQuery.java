@@ -10,7 +10,7 @@ public class RunQuery {
 	/**
 	 * This method run all the queries.
 	 * @param network
-	 * @return a list of String with all the answers.
+	 * @return a list of String with all the answers
 	 */
 	public static List<String> runQueries(Network network) {
 		List<String> answers = new ArrayList<>();
@@ -22,9 +22,10 @@ public class RunQuery {
 
 	/**
 	 * This function divide the query into their algorithm.
+	 * Attention: this method must never return null.
 	 * @param network
 	 * @param query
-	 * @return the answer in String.
+	 * @return the answer in {@link String}
 	 */
 	private static String create_answer(Network network, Query query) {
 		switch(query.getAlgorithm()) {
@@ -38,5 +39,5 @@ public class RunQuery {
 			return null;
 		}
 	}
-	
+
 }

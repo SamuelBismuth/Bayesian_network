@@ -18,30 +18,13 @@ public class Events {
 		this.events = events;
 	}
 	
-	protected Event getDynamicEvent() {
-		return new ArrayList<>(this.getEvents()).get(this.getEvents().size() - 1);
-	}
-	
 	/**
-	 * @return the events
-	 */
-	public Set<Event> getEvents() {
-		return events;
-	}
-	
-	public String toString() {
-		String answer = "";
-		for(Event event : this.getEvents())
-			answer += event.toString() + ",";
-		return answer;
-	}
-
-	/**
-	 * TODO: Implement it.
+	 * This method tests if the list of {@link Event} that we pass as a parameter is include 
+	 * into this set of {@link Event}.
 	 * @param listEvent
-	 * @return
+	 * @return true if is included, else false
 	 */
-	public boolean isIncluded(List<Event> listEvent) {
+	protected boolean isIncluded(List<Event> listEvent) {
 		return listEvent.stream().
 				allMatch(thisEvent -> 
 				{ for (Event evidenceEvent : this.getEvents())
@@ -51,6 +34,23 @@ public class Events {
 						return false;
 				return true;
 				});
+	}
+	
+	/**
+	 * This method return the dynamic event of the set.
+	 * @return {@link Event}
+	 */
+	protected Event getDynamicEvent() {
+		return new ArrayList<>(this.getEvents()).get(this.getEvents().size() - 1);
+	}
+	
+	/*##################Getter##################*/
+
+	/**
+	 * @return the events
+	 */
+	public Set<Event> getEvents() {
+		return events;
 	}
 	
 }

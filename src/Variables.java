@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
  */
 public class Variables {
 
-	private Set<Variable> variables;
+	private Set<Variable> variables;  // The set of variables.
 
 	/**
 	 * Constructor for {@link Variables}.
@@ -19,6 +19,11 @@ public class Variables {
 		this.variables = variables;
 	}
 
+	/**
+	 * This method return all the different variables from the passing events.
+	 * @param events
+	 * @return set of {@link Variable}
+	 */
 	protected Set<Variable> getOther(Events events) {
 		return this.getVariables().
 				stream().
@@ -51,6 +56,11 @@ public class Variables {
 		return variablesByNames;
 	}
 
+	/**
+	 * This method calculates the probability for a given list of {@link Event}
+	 * @param events
+	 * @return the probability
+	 */
 	protected double calculateProbability(List<Event> events) {
 		double answer = 1.0;
 		Algorithms.mulitiplicationCounter--;
@@ -66,7 +76,12 @@ public class Variables {
 		return answer;
 	}
 
-	public Set<Variable> deleteIrrelevant(Set<Variable> all) {
+	/**
+	 * This method delete from the network all the irrelevant {@link Variable} of the query.
+	 * @param all
+	 * @return all the deleted {@link Variable}
+	 */
+	protected Set<Variable> deleteIrrelevant(Set<Variable> all) {
 		Set<Variable> relevantVariable = new LinkedHashSet<>(all);
 		for(Variable variable : all) 
 			this.getAncestor(relevantVariable, variable);
@@ -77,18 +92,10 @@ public class Variables {
 	}
 
 	/**
-	 * For a given variable, this function return all this ancestor.
-	 * @param ancestors
-	 * @param variable
+	 * Given the query, this method creates all the {@link Factors}.
+	 * @param query
+	 * @return the object {@link Factors}
 	 */
-	private void getAncestor(Set<Variable> ancestors, Variable variable) {
-		if(variable.getParents() != null) {
-			ancestors.addAll(this.findVariablesByNames(variable.getParents()));
-			for (Variable parent : this.findVariablesByNames(variable.getParents()))
-				getAncestor(ancestors, parent);
-		}
-	}
-
 	protected Factors createFactors(Query query) {
 		Set<Factor> factors = new LinkedHashSet<>();
 		for(Variable variable : this.getVariables())
@@ -102,6 +109,27 @@ public class Variables {
 				new Variables(this.getVariables()), query);
 	}
 
+	/*##################Privates##################*/
+
+	/**
+	 * For a given variable, this function computes all this ancestor.
+	 * @param ancestors
+	 * @param variable
+	 */
+	private void getAncestor(Set<Variable> ancestors, Variable variable) {
+		if(variable.getParents() != null) {
+			ancestors.addAll(this.findVariablesByNames(variable.getParents()));
+			for (Variable parent : this.findVariablesByNames(variable.getParents()))
+				getAncestor(ancestors, parent);
+		}
+	}
+
+	/**
+	 * Given a set of {@link String} including {@link Variables} names, this function computes
+	 * the inverse of the set.
+	 * @param variables
+	 * @return the {@link Set} of {@link Variable}
+	 */
 	private Set<Variable> getInverse(Set<String> variables) {
 		return this.getVariables().stream().filter(var -> {
 			for(String var2 : variables)
@@ -111,6 +139,12 @@ public class Variables {
 		}).collect(Collectors.toSet());
 	}
 
+	/**
+	 * This functions creates a new {@link Factor}.
+	 * @param evidences
+	 * @param variable
+	 * @return the new {@link Factor}
+	 */
 	private Factor createFactor(Evidences evidences, Variable variable) {
 		Set<Probability> probabilities = new LinkedHashSet<>();
 		for (CPT cpt : variable.getCpts().getCpts())
@@ -121,10 +155,11 @@ public class Variables {
 	}
 
 	/**
+	 * This function return a {@link Set} of {@link Variable} which must be the {@link Factor} {@link Variable}.
 	 * Can't return a null value.
 	 * @param evidences
 	 * @param variable
-	 * @return
+	 * @return a set of {@link Variable}
 	 */
 	private Set<Variable> getFactorVariable(Evidences evidences, Variable variable) {
 		Set<Variable> setVariables = new LinkedHashSet<>();
@@ -140,6 +175,8 @@ public class Variables {
 			setVariables.add(variable);
 		return setVariables;
 	}
+	
+	/*##################Getter and Setter##################*/
 
 	/**
 	 * @return the variables
@@ -153,13 +190,6 @@ public class Variables {
 	 */
 	public void setVariables(Set<Variable> variables) {
 		this.variables = variables;
-	}
-
-	public String toString() {
-		String ans = "";
-		for (Variable variable : this.getVariables())
-			ans += variable.toString();
-		return ans;
 	}
 
 }

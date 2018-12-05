@@ -9,6 +9,12 @@ import java.util.stream.Stream;
  */
 public class Util {
 
+	/**
+	 * This method prepare the marginalization for the Algorithm 1.
+	 * @param network
+	 * @param query
+	 * @return the result of the marginalization
+	 */
 	protected static double prepareMarginalization(Network network, Query query) {
 		Events events = new Events(UtilList.concatenateItemWithSet(
 				query.getEvidences().getEvents().getEvents(), 
@@ -17,6 +23,12 @@ public class Util {
 		return calculateMarginalization(network, events, cartesianProduct(hiddenVariables));
 	}
 
+	/**
+	 * This method prepare the inverse of the marginalization for the Algorithm 1.
+	 * @param network
+	 * @param query
+	 * @return the result of the marginalization
+	 */
 	protected static double prepareInverseMarginalization(Network network, Query query) {
 		double answer = 0.0;
 		Algorithms.additionCounter--;
@@ -35,6 +47,29 @@ public class Util {
 
 	}
 
+	/**
+	 * This method return the cartesian product of the given {@link Variables}.
+	 * @param hiddenVariable
+	 * @return a list of a list of {@link Event}
+	 */
+	protected static List<List<Event>> cartesianProduct(Variables hiddenVariable) {
+		List<List<Event>> events = new ArrayList<List<Event>>();
+		for(Variable variable : hiddenVariable.getVariables()) 
+			events.add(createListEvent(
+					variable.getName(), 
+					variable.getValues()));
+		return calculateCartesianProduct(events);
+	}
+	
+	/*##################Privates##################*/
+
+	/**
+	 * This method calculate the marginalization.
+	 * @param network
+	 * @param events
+	 * @param cartesianProduct
+	 * @return the result of the marginalization
+	 */
 	private static double calculateMarginalization(
 			Network network, 
 			Events events, 
@@ -48,15 +83,6 @@ public class Util {
 					.collect(Collectors.toList()));
 		}
 		return answer;
-	}
-	
-	protected static List<List<Event>> cartesianProduct(Variables hiddenVariable) {
-		List<List<Event>> events = new ArrayList<List<Event>>();
-		for(Variable variable : hiddenVariable.getVariables()) 
-			events.add(createListEvent(
-					variable.getName(), 
-					variable.getValues()));
-		return calculateCartesianProduct(events);
 	}
 
 	/**
@@ -86,6 +112,13 @@ public class Util {
 		return resultLists;
 	}
 
+	/**
+	 * For a given name and values, this function create a list of event composed
+	 * by the name and the numerous values.
+	 * @param name
+	 * @param values
+	 * @return a list of {@link Event}
+	 */
 	private static List<Event> createListEvent(String name, Values values) {
 		List<Event> events = new ArrayList<>();
 		for(Value value : values.getValues())

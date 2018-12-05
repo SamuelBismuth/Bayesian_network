@@ -20,6 +20,11 @@ public class Probability {
 		this.probability = probability;
 	}
 
+	/**
+	 * Given a variable name, this method return all the other event.
+	 * @param variableName
+	 * @return a set of {@link Event}
+	 */
 	protected Set<Event> getOtherEvents(String variableName) {
 		if (this.getEvents().getEvents().size() == 1)
 			return null;
@@ -30,7 +35,12 @@ public class Probability {
 						equals(variableName)).
 				collect(Collectors.toSet());
 	}
-	
+
+	/**
+	 * This function check if the evidences match with this probability.
+	 * @param evidences
+	 * @return true if there is match, else false
+	 */
 	protected boolean match(Evidences evidences) {
 		return this.getEvents().getEvents().stream().
 				allMatch(thisEvent -> 
@@ -42,6 +52,8 @@ public class Probability {
 				return true;
 				});
 	}
+
+	/*##################Getters and Setter##################*/
 
 	/**
 	 * @return the events
@@ -62,10 +74,6 @@ public class Probability {
 	 */
 	public void setProbability(double probability) {
 		this.probability = probability;
-	}
-
-	public String toString() {
-		return this.getEvents().toString() + "=" + this.getProbability();
 	}
 
 }

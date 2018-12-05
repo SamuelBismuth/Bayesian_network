@@ -8,8 +8,7 @@ public class ex1 {
 	/**
 	 * The main method.
 	 * TODO: Need to check how it's work with JAVAC.
-	 * TODO: Check if everything correspond with the rules.
-	 * TODO: Implements tests.
+	 * TODO: Check if everything correspond with the rules by testing and comparing with other.
 	 * @param args
 	 */
 	public static void main(String[] args) {

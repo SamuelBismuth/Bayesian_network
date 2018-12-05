@@ -23,7 +23,7 @@ public class Algorithms {
 	 * Notice that the algorithm 1 is not really an algorithm but more a simple prediction.
 	 * @param network
 	 * @param query
-	 * @return the result of the query including the counter in the well form.
+	 * @return the result of the query including the counter in the well form
 	 */
 	protected static String algorithm1(Network network, Query query) {	
 		additionCounter = mulitiplicationCounter = 0; 

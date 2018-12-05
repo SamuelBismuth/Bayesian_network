@@ -18,7 +18,7 @@ public class Variable {
 	 * @param name
 	 * @param values
 	 * @param parents
-	 * @param cpt
+	 * @param cpts
 	 */
 	public Variable(String name, Values values, Set<String> parents, CPTs cpts) {
 		this.name = name;
@@ -27,6 +27,11 @@ public class Variable {
 		this.cpts = cpts;
 	}
 
+	/**
+	 * This method checks if the events are include on the variable.
+	 * @param events
+	 * @return true if is include else false
+	 */
 	protected boolean isInclude(Events events) {
 		for (Event event : events.getEvents())
 			if(event.getVariable().equals(this.getName()))
@@ -34,6 +39,12 @@ public class Variable {
 		return true;
 	}
 
+	/**
+	 * For a given list of {@link Event}, this function returns a list of {@link Event}
+	 * which are matched with the parameter.
+	 * @param events
+	 * @return the list of {@link Event}
+	 */
 	protected List<Event> matchParent(List<Event> events) {
 		return events.
 				stream().
@@ -41,6 +52,8 @@ public class Variable {
 						anyMatch(parent -> parent.equals(thisEvent.getVariable()))).
 				collect(Collectors.toList());
 	}
+	
+	/*##################Getters##################*/
 
 	/**
 	 * @return the name
@@ -68,18 +81,6 @@ public class Variable {
 	 */
 	public CPTs getCpts() {
 		return cpts;
-	}
-
-	public String toString() {
-		if (this.getParents() == null)
-			return "Name:" + this.getName() + "\n" +
-			"Values:" + this.getValues().getValues().toString() + "\n" +
-			"Parents: null \n" +
-			"CPTs: \n" + this.getCpts().toString() + "\n";
-		return "Name:" + this.getName() + "\n" +
-		"Values:" + this.getValues().getValues().toString() + "\n" +
-		"Parents:" + this.getParents().toString() + "\n" +
-		"CPTs: \n" + this.getCpts().toString() + "\n";
 	}
 
 }

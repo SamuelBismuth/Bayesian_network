@@ -14,15 +14,13 @@ public class Evidences {
 		this.events = events;
 	}
 
+	/*##################Getter##################*/
+
 	/**
 	 * @return the events
 	 */
 	public Events getEvents() {
 		return events;
-	}
-	
-	public String toString() {
-		return this.getEvents().toString();
 	}
 	
 }

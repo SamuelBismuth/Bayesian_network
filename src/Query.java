@@ -24,12 +24,18 @@ public class Query {
 		this.algorithm = algorithm;
 	}
 
+	/**
+	 * This method return all the {@link Variable} name.
+	 * @return a set of {@link String}
+	 */
 	protected Set<String> getAllVariableName() {
 		return UtilList.concatenateItemWithSet(
 				this.getEvidences().getEvents().getEvents(),this.getQuery()).
 				stream().map(item->item.getVariable()).collect(Collectors.toSet());
 	}
 	
+	/*##################Getters##################*/
+
 	/**
 	 * @return the query
 	 */
@@ -50,10 +56,5 @@ public class Query {
 	public char getAlgorithm() {
 		return algorithm;
 	}
-	
-	public String toString() {
-		return "P(" + this.getQuery().toString() + "|" + this.getEvidences().toString() + ")" +  
-				"Algo :"+ this.getAlgorithm();
-	}
-	
+
 }

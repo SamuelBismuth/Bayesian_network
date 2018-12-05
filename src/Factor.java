@@ -15,7 +15,7 @@ public class Factor {
 	private Set<Probability> probability;  // The table of the factor.
 
 	/**
-	 * Constructor fot the object {@link Factor}.
+	 * Constructor for the object {@link Factor}.
 	 * @param variables
 	 * @param probability
 	 */
@@ -25,8 +25,9 @@ public class Factor {
 	}
 
 	/**
-	 * This function join two factor.
-	 * @param fac2
+	 * This function join two factors.
+	 * @See the algorithm variable elimination for more details.
+	 * @param fac
 	 * @return the new factor.
 	 */
 	public Factor join(Factor fac) {
@@ -45,14 +46,12 @@ public class Factor {
 		return new Factor(variables, probabilities);
 	}
 
-	private double getMatch(List<Event> events) {
-		for(Probability probability : this.getProbability()) 
-			if (probability.match(new Evidences(new Events(new LinkedHashSet<>(events)))))
-				return probability.getProbability();
-		return 0;
-	}		
-
-	public void normalize() {
+	/**
+	 * This function normalize the table of the {@link Factor}.
+	 * Since we're using this function only on the end of the algorithm, 
+	 * we're able to assume that there is only one factor.
+	 */
+	protected void normalize() {
 		Algorithms.additionCounter += this.getProbability().size() - 1;
 		double lambda = 0.0;
 		for(Probability prob : this.getProbability()) 
@@ -60,8 +59,14 @@ public class Factor {
 		for(Probability prob2 : this.getProbability()) 
 			prob2.setProbability(prob2.getProbability() / lambda);
 	}
-	
-	public double getFinalProbability(Value value) {
+
+	/**
+	 * This function return the final probability given the value of the query.
+	 * Attention, this function must never return 0.0. 
+	 * @param value
+	 * @return the probability
+	 */
+	protected double getFinalProbability(Value value) {
 		for (Probability probability : this.getProbability()) {
 			if(probability.getEvents().getEvents().iterator().next()
 					.getValue().getValue().equals(value.getValue()))
@@ -69,6 +74,23 @@ public class Factor {
 		}
 		return 0.0;
 	}
+
+	/*##################Private##################*/
+
+	/**
+	 * Given a list of {@link Event}, this function returns the double corresponding to the
+	 * {@link Value} of the events.
+	 * @param events
+	 * @return the probability
+	 */
+	private double getMatch(List<Event> events) {
+		for(Probability probability : this.getProbability()) 
+			if (probability.match(new Evidences(new Events(new LinkedHashSet<>(events)))))
+				return probability.getProbability();
+		return 0;
+	}		
+
+	/*##################Getters##################*/
 
 	/**
 	 * @return the variables
@@ -82,10 +104,6 @@ public class Factor {
 	 */
 	public Set<Probability> getProbability() {
 		return probability;
-	}
-
-	public String toString() {
-		return "Var: " + this.getVariables().toString() + "Prob: " + this.getProbability().toString() + "\n";
 	}
 
 }
@@ -105,4 +123,5 @@ class FactorComparator implements Comparator<Factor> {
 		return o1.getProbability().size() > o2.getProbability().size() ? 1 : 
 			o1.getProbability().size() == o2.getProbability().size() ? -0 : -1;
 	}
+
 }

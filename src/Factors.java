@@ -14,13 +14,14 @@ public class Factors {
 
 	private Set<Factor> factors;  // The factors.
 	private Variables variableFactors;  // All the variables of the factors.
-	private Variables variables;
+	private Variables variables; // All the variables of the network.
 	private Query query;  // The query we need to answer.
 
 	/**
 	 * Constructor for {@link Factors}.
 	 * @param factors2
 	 * @param variableFactors
+	 * @param variables
 	 * @param query
 	 */
 	public Factors(Set<Factor> factors2, Variables variableFactors, Variables variables, Query query) {
@@ -34,21 +35,42 @@ public class Factors {
 	 * This function run a query.
 	 * i.e., this method do: union, and eliminate for all the variables of the factors.
 	 */
-	public void run() {
+	protected void run() {
 		for (Variable variable : this.getHiddenVariable()) {
-			Factor factor = unionAll(this.match(variable), variable);  // join.
-			factor = eliminate(factor, variable); 
+			Factor factor = unionAll(this.match(variable), variable);  // Join.
+			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
 			this.getFactors().add(factor);
 		}
 		for (Variable variable : this.getRemainingVariable()) {
-			Factor factor = unionAll(this.match(variable), variable);  // join.
-			factor = eliminate(factor, variable); 
+			Factor factor = unionAll(this.match(variable), variable);  // Join.
+			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
 			this.getFactors().add(factor);
 		}
 	}
 
+	/**
+	 * This method make the union of all the factors including the same variable.
+	 * @param factors
+	 * @param variable
+	 * @return the new {@link Factor} received after all the join
+	 */
+	protected Factor unionAll(List<Factor> factors, Variable variable) {
+		while(factors.size() > 1) {
+			Collections.sort(factors, new FactorComparator());
+			factors.set(0, factors.get(0).join(factors.get(1)));		
+			factors.remove(1);
+		}
+		return factors.get(0);
+	}
+	
+	/*##################Privates##################*/
+	
+	/**
+	 * This method return the list of the hidden variables of the {@link Factors}.
+	 * @return list of {@link Variable}
+	 */
 	private List<Variable> getHiddenVariable() {
 		List<Variable> hiddenVariableSorted = this.getVariableFactors().getVariables().stream().
 				filter(var -> {
@@ -65,6 +87,10 @@ public class Factors {
 		return hiddenVariableSorted;
 	}
 
+	/**
+	 * This method return the list of the remaining variables of the {@link Factors}.
+	 * @return list of {@link Variable}
+	 */
 	private List<Variable> getRemainingVariable() {
 		List<Variable> remainingVariableSorted =  new ArrayList<>(this.getVariables().
 				findVariablesByNames(query.getEvidences().getEvents().getEvents().
@@ -77,15 +103,11 @@ public class Factors {
 		return remainingVariableSorted;
 	}
 
-	protected Factor unionAll(List<Factor> factors, Variable variable) {
-		while(factors.size() > 1) {
-			Collections.sort(factors, new FactorComparator());
-			factors.set(0, factors.get(0).join(factors.get(1)));		
-			factors.remove(1);
-		}
-		return factors.get(0);
-	}
-
+	/**
+	 * This method return all the factor included the variable.
+	 * @param variable
+	 * @return a list of {@link Factor}
+	 */
 	private List<Factor> match(Variable variable) {
 		List<Factor> factors = new ArrayList<>();
 		for (Factor factor : this.getFactors()) {
@@ -120,6 +142,8 @@ public class Factors {
 		}
 		return new Factor(factor.getVariables(), newProbability);
 	}
+	
+	/*##################Getters##################*/
 
 	/**
 	 * @return the factors
@@ -158,7 +182,7 @@ public class Factors {
 class VariableComparatorAlgorithm2 implements Comparator<Variable> {
 
 	/**
-	 * The method compare.
+	 * The method compare by alphabetical order.
 	 */
 	@Override
 	public int compare(Variable o1, Variable o2) {
@@ -168,6 +192,7 @@ class VariableComparatorAlgorithm2 implements Comparator<Variable> {
 }
 
 /**
+ * TODO: Implement it.
  * @author sam
  * This class {@link Implementation} Comparator, two compare two Variable.
  */
