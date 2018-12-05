@@ -13,6 +13,7 @@ Three algorithms are implemeted, each algorithm answer to a query of the form : 
 
 To run the program you need a txt file include the bayesian network and the queries as the next:
 
+'''
 Network
 Variables: B,E,A,J,M
 
@@ -57,6 +58,7 @@ P(B=true|J=true,M=true),2
 P(B=true|J=true,M=true),3
 P(J=true|B=true),1
 P(J=true|B=true),2
+'''
 
 Attention: The spaces, the commas, the line return must be respected.
 Please use JAVAC to run the program.
@@ -64,8 +66,8 @@ Please use JAVAC to run the program.
 # Repository explaination
 
 This repository include the next folders:
--Paper: In this folder, there is a paper including a proposed improvment of the Variable Elimination Algorithm.
--input: In this folder are found the input in txt files.
--output: In this folder are found the output in txt files
--src: In this folder the source code in java.
+- paper: In this folder, there is a paper including a proposed improvment of the Variable Elimination Algorithm.
+- input: In this folder are found the input in txt files.
+- output: In this folder are found the output in txt files
+- src: In this folder the source code in java.
 
