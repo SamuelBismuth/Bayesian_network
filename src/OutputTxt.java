@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -13,11 +16,19 @@ import java.util.List;
 public class OutputTxt {
 
 	/**
-	 * TODO: Implement it.
 	 * This function output the answer.
 	 * @param answers
 	 */
-	public static void writeAnswer(List<String> answers) {		
+	public static void writeAnswer(List<String> answers) {	
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter("output/output.txt"));
+			for (String answer : answers)
+				writer.write(answer + "\n");
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

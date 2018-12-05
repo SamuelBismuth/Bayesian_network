@@ -109,6 +109,19 @@ public class Variables {
 				new Variables(this.getVariables()), query);
 	}
 
+	/**
+	 * Assuming the number of neighbor in our case is the number of descendant child.
+	 * @param variable
+	 * @return
+	 */
+	protected void getNeighbor(Set<Variable> descendant, Variable variable) {
+		if(getChild(variable) != null)
+			descendant.addAll(getChild(variable));
+		for (Variable child : getChild(variable)) {
+			getNeighbor(descendant, child);
+		}
+	}
+
 	/*##################Privates##################*/
 
 	/**
@@ -122,6 +135,22 @@ public class Variables {
 			for (Variable parent : this.findVariablesByNames(variable.getParents()))
 				getAncestor(ancestors, parent);
 		}
+	}
+
+	/**
+	 * This method return the child of a {@link Variable}.
+	 * @param variable
+	 * @return a set of {@link Variable}
+	 */
+	private Set<Variable> getChild(Variable variable) {
+		return this.getVariables().stream().filter(var -> { 
+			if(var.getParents() == null)
+				return false;
+			for(String varParents : var.getParents())
+				if(varParents.equals(variable.getName()))
+					return true;
+			return false;
+		}).collect(Collectors.toSet());
 	}
 
 	/**
@@ -175,7 +204,7 @@ public class Variables {
 			setVariables.add(variable);
 		return setVariables;
 	}
-	
+
 	/*##################Getter and Setter##################*/
 
 	/**

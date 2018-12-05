@@ -9,6 +9,22 @@ Three algorithms are implemeted, each algorithm answer to a query of the form : 
 - The second algorithm is the Variable Elimination Algorithm (https://en.wikipedia.org/wiki/Variable_elimination).
 - The third algorithm is the same that the second algorithm except that the order of the factors is determined such as the complexity of the algorithm should be more efficient.
 
+# More about the algorithm 3
+
+From Wikipedia (https://en.wikipedia.org/wiki/Variable_elimination).
+
+```
+Ordering
+
+Finding the optimal order in which to eliminate variables is an NP-hard problem. As such there are heuristics one may follow to better optimize performance by order:
+
+    Minimum Degree: Eliminate the variable which results in constructing the smallest factor possible.
+    Minimum Fill: By constructing an undirected graph showing variable relations expressed by all CPTs, eliminate the variable which would result in the least edges to be added post elimination.
+```
+
+This implementation of the algorithm use a greedy method, which minimize the number of neighbor.
+Source: https://cedar.buffalo.edu/~srihari/CSE674/Chap9/9.3-VE-Algorithm.pdf slide 28.
+
 # Run configuration
 
 To run the program you need a txt file include the bayesian network and the queries as the next:
@@ -66,8 +82,8 @@ Please use JAVAC to run the program.
 # What contains the repository?
 
 This repository include the next folders:
-- paper: In this folder, there is a paper including a proposed improvment of the Variable Elimination Algorithm.
-- input: In this folder are found the input in txt files.
-- output: In this folder are found the output in txt files
+- paper: In this folder, there is a paper including a proposed improvement of the Variable Elimination Algorithm and the explanation about the heuristic way to ordering the factors.
+- input: In this folder are found the inputs in txt files.
+- output: In this folder are found the output in txt files.
 - src: In this folder the source code in java.
-
+- doc: In this folder all the javadoc of the code.

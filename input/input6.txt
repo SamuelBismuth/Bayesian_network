@@ -66,3 +66,4 @@ P(X=true|B=false),3
 P(D=true|A=true),1
 P(D=true|A=true),2
 P(D=true|A=true),3
+

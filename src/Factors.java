@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,17 +33,17 @@ public class Factors {
 	}
 
 	/**
-	 * This function run a query.
+	 * This function run a query without worried about the way to sort the {@link Factors}.
 	 * i.e., this method do: union, and eliminate for all the variables of the factors.
 	 */
-	protected void run() {
-		for (Variable variable : this.getHiddenVariable()) {
+	protected void run(boolean flag) {
+		for (Variable variable : this.getHiddenVariable(flag)) {
 			Factor factor = unionAll(this.match(variable), variable);  // Join.
 			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
 			this.getFactors().add(factor);
 		}
-		for (Variable variable : this.getRemainingVariable()) {
+		for (Variable variable : this.getRemainingVariable(flag)) {
 			Factor factor = unionAll(this.match(variable), variable);  // Join.
 			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
@@ -64,17 +65,17 @@ public class Factors {
 		}
 		return factors.get(0);
 	}
-	
+
 	/*##################Privates##################*/
-	
+
 	/**
 	 * This method return the list of the hidden variables of the {@link Factors}.
 	 * @return list of {@link Variable}
 	 */
-	private List<Variable> getHiddenVariable() {
+	private List<Variable> getHiddenVariable(boolean flag) {
 		List<Variable> hiddenVariableSorted = this.getVariableFactors().getVariables().stream().
 				filter(var -> {
-					for(Variable varRemaining : this.getRemainingVariable())
+					for(Variable varRemaining : this.getRemainingVariable(flag))
 						if (varRemaining.getName().equals(var.getName()) || 
 								query.getQuery().getVariable().equals(var.getName()))
 							return false;
@@ -83,7 +84,10 @@ public class Factors {
 					else
 						return false;
 				}).collect(Collectors.toList());
-		Collections.sort(hiddenVariableSorted, new VariableComparatorAlgorithm2());
+		if(flag)
+			Collections.sort(hiddenVariableSorted, new VariableComparatorAlgorithm2());
+		else
+			Collections.sort(hiddenVariableSorted, new VariableComparatorAlgorithm3(this.getVariables()));
 		return hiddenVariableSorted;
 	}
 
@@ -91,15 +95,18 @@ public class Factors {
 	 * This method return the list of the remaining variables of the {@link Factors}.
 	 * @return list of {@link Variable}
 	 */
-	private List<Variable> getRemainingVariable() {
+	private List<Variable> getRemainingVariable(boolean flag) {
 		List<Variable> remainingVariableSorted =  new ArrayList<>(this.getVariables().
 				findVariablesByNames(query.getEvidences().getEvents().getEvents().
-				stream().map(event->event.getVariable()).
-				filter(this.getVariableFactors().getVariables().stream().
-						map(thisVariable -> thisVariable.getName()).
-						collect(Collectors.toList())::contains)
-				.collect(Collectors.toSet())));
-		Collections.sort(remainingVariableSorted, new VariableComparatorAlgorithm2());
+						stream().map(event->event.getVariable()).
+						filter(this.getVariableFactors().getVariables().stream().
+								map(thisVariable -> thisVariable.getName()).
+								collect(Collectors.toList())::contains)
+						.collect(Collectors.toSet())));
+		if(flag)
+			Collections.sort(remainingVariableSorted, new VariableComparatorAlgorithm2());
+		else
+			Collections.sort(remainingVariableSorted, new VariableComparatorAlgorithm3(this.getVariables()));
 		return remainingVariableSorted;
 	}
 
@@ -142,7 +149,7 @@ public class Factors {
 		}
 		return new Factor(factor.getVariables(), newProbability);
 	}
-	
+
 	/*##################Getters##################*/
 
 	/**
@@ -192,29 +199,42 @@ class VariableComparatorAlgorithm2 implements Comparator<Variable> {
 }
 
 /**
- * TODO: Implement it.
  * @author sam
  * This class {@link Implementation} Comparator, two compare two Variable.
  */
-/*class VariableComparatorAlgorithm3 implements Comparator<Variable> {
+class VariableComparatorAlgorithm3 implements Comparator<Variable> {
 
-	private Factors factors;
+	private Variables variables;
 
 	/**
- * Constructor.
- * @param factors
- */
-/*public VariableComparatorAlgorithm3(Factors factors) {
-		this.factors = factors;
+	 * Constructor.
+	 * @param factors
+	 */
+	public VariableComparatorAlgorithm3(Variables variables) {
+		this.variables = variables;
 	}
 
 	/**
- * The method compare.
- */
-/*@Override
+	 * The method compare using the next ordering:
+	 * Eliminate the variable which have the smallest neighbor possible.
+	 */
+	@Override
 	public int compare(Variable o1, Variable o2) {
-		return factors.match(o1).size() > factors.match(o2).size() ? 1 : 
-			 factors.match(o1).size() ==  factors.match(o2).size() ? -0 : -1;
-
+		Set<Variable> descendantO1 = new HashSet<>();
+		Set<Variable> descendantO2 = new HashSet<>();
+		this.getVariables().getNeighbor(descendantO1, o1); 
+		this.getVariables().getNeighbor(descendantO2, o2); 
+		return descendantO1.size() < descendantO2.size() ? 1 : 
+			descendantO1.size() ==  descendantO2.size() ? -0 : -1;
 	}
-}*/
+
+	/*##################Getter##################*/
+
+	/**
+	 * @return the variables
+	 */
+	public Variables getVariables() {
+		return variables;
+	}
+
+}

@@ -39,14 +39,14 @@ public class Algorithms {
 	 * This function implements the algorithm Variable elimination.
 	 * @param network
 	 * @param query
-	 * @return the result of the query including the counter in the well form.
+	 * @return the result of the query including the counter in the well form
 	 */
 	protected static String algorithm2(Network network, Query query) {
 		additionCounter = mulitiplicationCounter = 0; 
 		Set<Variable> deletedVariable = network.getVariables().
 				deleteIrrelevant(network.getVariables().findVariablesByNames(query.getAllVariableName()));
 		Factors factors = network.getVariables().createFactors(query);
-		factors.run();
+		factors.run(true);
 		Factor factor = factors.unionAll(new ArrayList<>(factors.getFactors()), network.getVariables().
 				findVariableByName(query.getQuery().getVariable()));
 		factor.normalize();
@@ -58,13 +58,26 @@ public class Algorithms {
 	}
 
 	/**
-	 * TODO: Implements a new way to sort the factors and explained the logic.
+	 * This function implements the algorithm Variable elimination with ordering the factos.
+	 * The order is by the number of neighbor.
 	 * @param network
 	 * @param query
-	 * @return
+	 * @return the result of the query including the counter in the well form
 	 */
 	protected static String algorithm3(Network network, Query query) {
-		return null;
+		additionCounter = mulitiplicationCounter = 0; 
+		Set<Variable> deletedVariable = network.getVariables().
+				deleteIrrelevant(network.getVariables().findVariablesByNames(query.getAllVariableName()));
+		Factors factors = network.getVariables().createFactors(query);
+		factors.run(false);
+		Factor factor = factors.unionAll(new ArrayList<>(factors.getFactors()), network.getVariables().
+				findVariableByName(query.getQuery().getVariable()));
+		factor.normalize();
+		network.getVariables().getVariables().addAll(deletedVariable);
+		return df.format(factor.
+				getFinalProbability(query.getQuery().getValue())) + "," +
+				Integer.toString(additionCounter) + "," +
+				Integer.toString(mulitiplicationCounter);
 	}
 
 }
