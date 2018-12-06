@@ -22,7 +22,7 @@ public class OutputTxt {
 	public static void writeAnswer(List<String> answers) {	
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter("output/output.txt"));
+			writer = new BufferedWriter(new FileWriter("output.txt"));
 			for (String answer : answers)
 				writer.write(answer + "\n");
 			writer.close();

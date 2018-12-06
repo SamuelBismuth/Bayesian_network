@@ -18,9 +18,7 @@ public class InputTxt {
 		List<String> lines = Collections.emptyList(); 
 		try { 
 			lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8); 
-		} 
-
-		catch (IOException e) { 
+		} catch (IOException e) { 
 			e.printStackTrace(); 
 		} 
 		return lines; 
