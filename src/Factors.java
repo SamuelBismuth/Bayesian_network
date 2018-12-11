@@ -37,17 +37,35 @@ public class Factors {
 	 * i.e., this method do: union, and eliminate for all the variables of the factors.
 	 */
 	protected void run(boolean flag) {
-		for (Variable variable : this.getHiddenVariable(flag)) {
+		List<Variable> hiddenVariables = this.getHiddenVariable(flag);
+		while(hiddenVariables.size() != 0) {
+			if(flag)
+				Collections.sort(hiddenVariables, new VariableComparatorAlgorithm2());
+			else
+				Collections.sort(hiddenVariables, new VariableComparatorAlgorithm3(new Variables(
+						new LinkedHashSet<>(hiddenVariables))));
+			Variable variable = hiddenVariables.get(0);
+			//System.out.println(hiddenVariables.stream().map(item->item.getName()).collect(Collectors.toList()));
 			Factor factor = unionAll(this.match(variable), variable);  // Join.
 			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
 			this.getFactors().add(factor);
+			hiddenVariables.remove(variable);
 		}
-		for (Variable variable : this.getRemainingVariable(flag)) {
+		List<Variable> remainingVariables = this.getRemainingVariable(flag);
+		while(remainingVariables.size() != 0) {
+			if(flag)
+				Collections.sort(remainingVariables, new VariableComparatorAlgorithm2());
+			else
+				Collections.sort(remainingVariables, new VariableComparatorAlgorithm3(new Variables(
+						new LinkedHashSet<>(remainingVariables))));
+			Variable variable = remainingVariables.get(0);
+			//System.out.println(remainingVariables.stream().map(item->item.getName()).collect(Collectors.toList()));
 			Factor factor = unionAll(this.match(variable), variable);  // Join.
 			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
 			this.getFactors().add(factor);
+			remainingVariables.remove(variable);
 		}
 	}
 

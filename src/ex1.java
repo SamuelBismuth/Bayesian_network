@@ -8,7 +8,9 @@ public class ex1 {
 	/**
 	 * The main method.
 	 * TODO: Check network grades: 80.
-	 * TODO: Check about the algo 3, ordering must be update?
+	 * TODO: Before the submission delete tostring and reformat.
+	 * TODO: Check if junit tests are required.
+	 * TODO: Explanation of the heuristic.
 	 * TODO: Submission must be as: src + pdf with explanation (network and moodle?).
 	 * @param args
 	 */

@@ -112,7 +112,6 @@ public class Variables {
 	/**
 	 * Assuming the number of neighbor in our case is the number of descendant child.
 	 * @param variable
-	 * @return
 	 */
 	protected void getNeighbor(Set<Variable> descendant, Variable variable) {
 		if(getChild(variable) != null)
