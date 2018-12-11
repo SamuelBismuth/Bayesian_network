@@ -3,10 +3,10 @@
  * This class represents the object {@link Event}.
  */
 public class Event {
-	
+
 	private String variable;  // The variable of the event.
 	private Value value; // The value of the variable.
-	
+
 	/**
 	 * Constructor for the {@link Event}.
 	 * @param variable
@@ -16,9 +16,9 @@ public class Event {
 		this.variable = variable;
 		this.value = value;
 	}
-	
+
 	/*##################Getters##################*/
-	
+
 	/**
 	 * @return the variable
 	 */
@@ -32,5 +32,9 @@ public class Event {
 	public Value getValue() {
 		return value;
 	}	
+
+	public String toString() {
+		return this.getVariable() + "=" + this.getValue();
+	}
 
 }

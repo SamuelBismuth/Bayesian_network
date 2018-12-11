@@ -76,4 +76,8 @@ public class Probability {
 		this.probability = probability;
 	}
 
+	public String toString() {
+		return this.getEvents().toString() + "=" + this.getProbability();
+	}
+
 }

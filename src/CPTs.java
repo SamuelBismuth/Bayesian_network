@@ -25,7 +25,7 @@ public class CPTs {
 	protected double getProbabilityAloneSoldier(Value value) {
 		return this.getCpts().iterator().next().getProbability(value);
 	}
-	
+
 	/**
 	 * This function return the probability of the next query:
 	 * Given the value of the stable event and the value of the dynamic event, 
@@ -41,7 +41,7 @@ public class CPTs {
 				return cpt.getProbability(value);
 		return 0.0;
 	}
-	
+
 	/*##################Getter##################*/
 
 	/**
@@ -49,6 +49,13 @@ public class CPTs {
 	 */
 	public Set<CPT> getCpts() {
 		return cpts;
+	}
+	
+	public String toString() {
+		String answer = "";
+		for (CPT cpt : this.getCpts())
+			answer += cpt.toString();
+		return answer;
 	}
 
 }

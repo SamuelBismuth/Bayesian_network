@@ -47,4 +47,3 @@ P(L=true|D=true),3
 P(G=medium|S=false),1
 P(G=medium|S=false),2
 P(G=medium|S=false),3
-

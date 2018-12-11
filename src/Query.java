@@ -10,7 +10,7 @@ public class Query {
 	private Event query;  // The event of the query.
 	private Evidences evidences;  // The evidences of the query.
 	private char algorithm;  // The used algorithm to answer the query.
-	
+
 	/**
 	 * Constructor for the {@link Query}, all the fields are required.
 	 * @param query
@@ -33,7 +33,7 @@ public class Query {
 				this.getEvidences().getEvents().getEvents(),this.getQuery()).
 				stream().map(item->item.getVariable()).collect(Collectors.toSet());
 	}
-	
+
 	/*##################Getters##################*/
 
 	/**
@@ -55,6 +55,11 @@ public class Query {
 	 */
 	public char getAlgorithm() {
 		return algorithm;
+	}
+
+	public String toString() {
+		return "P(" + this.getQuery().toString() + "|" + this.getEvidences().toString() + ")" +  
+				"Algo :"+ this.getAlgorithm();
 	}
 
 }

@@ -15,7 +15,7 @@ public class Queries {
 	public Queries(Set<Query> queries) {
 		this.queries = queries;
 	}
-	
+
 	/*##################Getter##################*/
 
 	/**
@@ -23,6 +23,13 @@ public class Queries {
 	 */
 	public Set<Query> getQueries() {
 		return queries;
+	}
+
+	public String toString() {
+		String ans = "";
+		for (Query query : this.getQueries())
+			ans += query.toString() + "\n";
+		return ans;
 	}
 
 }

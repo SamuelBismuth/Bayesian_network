@@ -13,7 +13,7 @@ public class Value {
 	public Value(String value) {
 		this.value = value;
 	}
-	
+
 	/*##################Getter##################*/
 
 	/**
@@ -21,6 +21,10 @@ public class Value {
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	public String toString() {
+		return this.getValue();
 	}
 	
 }

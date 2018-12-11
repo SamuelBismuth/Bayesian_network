@@ -105,5 +105,12 @@ public class CPT {
 	public Set<Probability> getTable() {
 		return table;
 	}
+	
+	public String toString() {
+		String answer = "";
+		for (Probability probability : this.getTable())
+			answer += probability.toString() + "\n";
+		return answer;
+}
 
 }

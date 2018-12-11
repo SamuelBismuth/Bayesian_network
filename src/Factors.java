@@ -147,6 +147,7 @@ public class Factors {
 				}
 			newProbability.add(new Probability(new Events(new LinkedHashSet<>(listEvent)), d));
 		}
+		factors.remove(factor);
 		return new Factor(factor.getVariables(), newProbability);
 	}
 

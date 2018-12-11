@@ -22,5 +22,9 @@ public class Evidences {
 	public Events getEvents() {
 		return events;
 	}
+
+	public String toString() {
+		return this.getEvents().toString();
+	}
 	
 }

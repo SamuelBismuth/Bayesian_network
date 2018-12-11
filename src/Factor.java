@@ -23,7 +23,7 @@ public class Factor {
 		this.variables = variables;
 		this.probability = probability;
 	}
-
+	
 	/**
 	 * This function join two factors.
 	 * @See the algorithm variable elimination for more details.
@@ -104,6 +104,10 @@ public class Factor {
 	 */
 	public Set<Probability> getProbability() {
 		return probability;
+	}
+
+	public String toString() {
+		return "Var: " + this.getVariables().stream().map(item->item.getName()).collect(Collectors.toList()).toString() + "Prob: " + this.getProbability().toString() + "\n";
 	}
 
 }

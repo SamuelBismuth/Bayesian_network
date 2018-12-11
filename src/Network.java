@@ -50,5 +50,10 @@ public class Network {
 	public Queries getQueries() {
 		return queries;
 	}
+	
+	public String toString() {
+		return this.getVariables().toString() +
+				this.getQueries().toString();
+	}
 
 }

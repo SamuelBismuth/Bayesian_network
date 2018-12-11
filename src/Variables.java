@@ -221,4 +221,11 @@ public class Variables {
 		this.variables = variables;
 	}
 
+	public String toString() {
+		String ans = "";
+		for (Variable variable : this.getVariables())
+			ans += variable.toString();
+		return ans;
+	}
+
 }
