@@ -50,12 +50,5 @@ public class CPTs {
 	public Set<CPT> getCpts() {
 		return cpts;
 	}
-	
-	public String toString() {
-		String answer = "";
-		for (CPT cpt : this.getCpts())
-			answer += cpt.toString();
-		return answer;
-	}
 
 }

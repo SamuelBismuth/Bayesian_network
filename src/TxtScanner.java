@@ -18,5 +18,5 @@ public class TxtScanner {
 				return;
 		throw new WrongTxt("The file doesn't include Queries...");
 	}
-	
+
 }

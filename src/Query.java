@@ -57,9 +57,4 @@ public class Query {
 		return algorithm;
 	}
 
-	public String toString() {
-		return "P(" + this.getQuery().toString() + "|" + this.getEvidences().toString() + ")" +  
-				"Algo :"+ this.getAlgorithm();
-	}
-
 }

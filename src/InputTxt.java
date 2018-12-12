@@ -8,7 +8,7 @@ import java.io.*;
  * This class read the txt.
  */
 public class InputTxt {
-	
+
 	/**
 	 * This function read the txt and convert him into a list of string.
 	 * @param fileName
@@ -23,5 +23,5 @@ public class InputTxt {
 		} 
 		return lines; 
 	} 
-	
+
 }

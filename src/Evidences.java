@@ -23,8 +23,4 @@ public class Evidences {
 		return events;
 	}
 
-	public String toString() {
-		return this.getEvents().toString();
-	}
-	
 }

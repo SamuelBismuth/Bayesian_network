@@ -33,8 +33,4 @@ public class Event {
 		return value;
 	}	
 
-	public String toString() {
-		return this.getVariable() + "=" + this.getValue();
-	}
-
 }

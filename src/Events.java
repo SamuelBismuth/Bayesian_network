@@ -17,7 +17,7 @@ public class Events {
 	public Events(Set<Event> events) {
 		this.events = events;
 	}
-	
+
 	/**
 	 * This method tests if the list of {@link Event} that we pass as a parameter is include 
 	 * into this set of {@link Event}.
@@ -35,7 +35,7 @@ public class Events {
 				return true;
 				});
 	}
-	
+
 	/**
 	 * This method return the dynamic event of the set.
 	 * @return {@link Event}
@@ -43,7 +43,7 @@ public class Events {
 	protected Event getDynamicEvent() {
 		return new ArrayList<>(this.getEvents()).get(this.getEvents().size() - 1);
 	}
-	
+
 	/*##################Getter##################*/
 
 	/**
@@ -52,12 +52,5 @@ public class Events {
 	public Set<Event> getEvents() {
 		return events;
 	}
-	
-	public String toString() {
-		String answer = "";
-		for(Event event : this.getEvents())
-			answer += event.toString() + ",";
-		return answer;
-}
-	
+
 }

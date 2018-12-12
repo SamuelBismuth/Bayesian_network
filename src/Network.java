@@ -3,12 +3,12 @@
  * This class represents the object Network.
  */
 public class Network {
-	
+
 	static Network instance = null;  // Singleton implementation.
-	
+
 	private Variables variables;  // The variables of the Network.
 	private Queries queries;  // The queries of the Network.
-	
+
 	/**
 	 * This static method comes from the singleton implementation.
 	 * Either a new network is created, or the actual network is returned.
@@ -22,7 +22,7 @@ public class Network {
 		instance = new Network(variables, queries);
 		return instance;
 	}
-	
+
 	/**
 	 * The constructor for the {@link Network}.
 	 * Since the network have a singleton implementation, the constructor is private.
@@ -34,7 +34,7 @@ public class Network {
 		this.variables = variables;
 		this.queries = queries;
 	}
-	
+
 	/*##################Getters##################*/
 
 	/**
@@ -49,11 +49,6 @@ public class Network {
 	 */
 	public Queries getQueries() {
 		return queries;
-	}
-	
-	public String toString() {
-		return this.getVariables().toString() +
-				this.getQueries().toString();
 	}
 
 }

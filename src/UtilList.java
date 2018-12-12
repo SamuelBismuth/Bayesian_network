@@ -26,7 +26,7 @@ public class UtilList {
 						item).stream()).
 				collect(Collectors.toList());
 	}
-	
+
 	/**
 	 * This method concatenate a lists and one item into a new list.
 	 * @param list
@@ -42,5 +42,5 @@ public class UtilList {
 						item).stream()).
 				collect(Collectors.toSet());
 	}
-	
+
 }

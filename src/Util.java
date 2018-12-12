@@ -60,7 +60,7 @@ public class Util {
 					variable.getValues()));
 		return calculateCartesianProduct(events);
 	}
-	
+
 	/*##################Privates##################*/
 
 	/**

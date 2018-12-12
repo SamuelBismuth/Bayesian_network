@@ -10,7 +10,7 @@ public class WrongTxt extends Exception {
 	 * @param message
 	 */
 	public WrongTxt(String message) {
-	    super(message);
+		super(message);
 	}
 
 }

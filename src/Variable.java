@@ -83,16 +83,4 @@ public class Variable {
 		return cpts;
 	}
 
-	public String toString() {
-		if (this.getParents() == null)
-			return "Name:" + this.getName() + "\n" +
-			"Values:" + this.getValues().getValues().toString() + "\n" +
-			"Parents: null \n" +
-			"CPTs: \n" + this.getCpts().toString() + "\n";
-		return "Name:" + this.getName() + "\n" +
-		"Values:" + this.getValues().getValues().toString() + "\n" +
-		"Parents:" + this.getParents().toString() + "\n" +
-		"CPTs: \n" + this.getCpts().toString() + "\n";
-	}
-
 }

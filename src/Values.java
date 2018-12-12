@@ -15,16 +15,16 @@ public class Values {
 	public Values(Set<Value> values) {
 		this.values = values;
 	}
-	
+
 	/**
 	 * This function returns the hidden value between all the values.
 	 * @return the hidden {@link Value}
 	 */
 	protected Value getHidden() {
 		return this.getValues().stream().reduce((first, second) -> second)
-		  .orElse(null);
+				.orElse(null);
 	}
-	
+
 	/*##################Getter##################*/
 
 	/**
@@ -33,5 +33,5 @@ public class Values {
 	public Set<Value> getValues() {
 		return values;
 	}
-	
+
 }

@@ -25,11 +25,4 @@ public class Queries {
 		return queries;
 	}
 
-	public String toString() {
-		String ans = "";
-		for (Query query : this.getQueries())
-			ans += query.toString() + "\n";
-		return ans;
-	}
-
 }
