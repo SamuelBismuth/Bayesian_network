@@ -45,7 +45,6 @@ public class Factors {
 				Collections.sort(hiddenVariables, new VariableComparatorAlgorithm3(new Variables(
 						new LinkedHashSet<>(hiddenVariables))));
 			Variable variable = hiddenVariables.get(0);
-			//System.out.println(hiddenVariables.stream().map(item->item.getName()).collect(Collectors.toList()));
 			Factor factor = unionAll(this.match(variable), variable);  // Join.
 			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
@@ -60,7 +59,6 @@ public class Factors {
 				Collections.sort(remainingVariables, new VariableComparatorAlgorithm3(new Variables(
 						new LinkedHashSet<>(remainingVariables))));
 			Variable variable = remainingVariables.get(0);
-			//System.out.println(remainingVariables.stream().map(item->item.getName()).collect(Collectors.toList()));
 			Factor factor = unionAll(this.match(variable), variable);  // Join.
 			factor = eliminate(factor, variable);  // Eliminate.
 			this.getFactors().removeAll(match(variable));
