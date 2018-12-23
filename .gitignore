@@ -25,3 +25,9 @@ hs_err_pid*
 # Addition
 .classpath
 .project
+
+# Ignore paper files
+Bayesian%20Network.zip
+BayesianNetwork.png
+BayesianNetwork.xml
+Heuristic%20Algorithm%20for%20Bayesian%20Network.zip
